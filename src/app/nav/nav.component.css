@@ -1,0 +1,15 @@
+
+    .navbar {
+      background-color: #333;
+    }
+    .navbar-brand, .navbar-nav .nav-link {
+      background-color: #fff; /* İçerikleri beyaz yapar */
+      padding: 5px;
+      border-radius: 4px; /* Köşeleri yuvarlar */
+      color: #000; /* Yazı rengini siyah yapar */
+    }
+    .navbar-nav .nav-link {
+      margin-left: 10px;
+      margin-right: 25px; /* Linkler arasına boşluk ekler */
+    }
+  

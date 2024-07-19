@@ -1,0 +1,51 @@
+<div class="container mt-4">
+  <form (ngSubmit)="onSubmit()" #tasinmazForm="ngForm">
+    <div class="form-group">
+      <label for="kullaniciId">Kullanıcı ID</label>
+      <input type="number" class="form-control" id="kullaniciId" required [(ngModel)]="tasinmaz.kullaniciId" name="kullaniciId">
+    </div>
+
+    <div class="form-group">
+      <label for="ilId">İl</label>
+      <select class="form-control" id="ilId" required [(ngModel)]="selectedIlId" name="ilId" (change)="onIlChange()">
+        <option *ngFor="let il of iller" [value]="il.ilId">{{ il.ilAdi }}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="ilceId">İlçe</label>
+      <select class="form-control" id="ilceId" required [(ngModel)]="selectedIlceId" name="ilceId" (change)="onIlceChange()">
+        <option *ngFor="let ilce of ilceler" [value]="ilce.ilceId">{{ ilce.ilceAdi }}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="mahalleId">Mahalle</label>
+      <select class="form-control" id="mahalleId" required [(ngModel)]="tasinmaz.mahalleId" name="mahalleId">
+        <option *ngFor="let mahalle of mahalleler" [value]="mahalle.mahalleId">{{ mahalle.mahalleAdi }}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="ada">ADA</label>
+      <input type="text" class="form-control" id="ada" required [(ngModel)]="tasinmaz.ada" name="ada">
+    </div>
+
+    <div class="form-group">
+      <label for="parsel">PARSEL</label>
+      <input type="text" class="form-control" id="parsel" required [(ngModel)]="tasinmaz.parsel" name="parsel">
+    </div>
+
+    <div class="form-group">
+      <label for="nitelik">NİTELİK</label>
+      <input type="text" class="form-control" id="nitelik" required [(ngModel)]="tasinmaz.nitelik" name="nitelik">
+    </div>
+
+    <div class="form-group">
+      <label for="koordinatBilgileri">KOORDİNAT BİLGİLERİ</label>
+      <input type="text" class="form-control" id="koordinatBilgileri" required [(ngModel)]="tasinmaz.koordinatBilgileri" name="koordinatBilgileri">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Güncelle</button>
+  </form>
+</div>

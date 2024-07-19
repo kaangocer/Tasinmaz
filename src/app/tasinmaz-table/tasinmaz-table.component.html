@@ -1,0 +1,62 @@
+<app-nav></app-nav>
+<div class="container mt-4">
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th>ID</th>
+          <th>İL ADI</th>
+          <th>İLÇE ADI</th>
+          <th>MAHALLE ADI</th>
+          <th>ADA</th>
+          <th>PARSEL</th>
+          <th>NİTELİK</th>
+          <th>KOORDİNAT BİLGİLERİ</th>
+          <th>KULLANICI ID</th>
+          <th>Seç</th> <!-- Yeni kolon: Seçim için checkbox -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tasinmaz of tasinmazlar">
+          <td>{{ tasinmaz.tasinmazId }}</td>
+          <td>{{ tasinmaz.ilAd }}</td>
+          <td>{{ tasinmaz.ilceAd }}</td>
+          <td>{{ tasinmaz.mahalleAd }}</td>
+          <td>{{ tasinmaz.ada }}</td>
+          <td>{{ tasinmaz.parsel }}</td>
+          <td>{{ tasinmaz.nitelik }}</td>
+          <td>{{ tasinmaz.koordinatBilgileri }}</td>
+          <td>{{ tasinmaz.kullaniciId }}</td>
+          <td>
+            <input type="checkbox" [checked]="isSelected(tasinmaz)" (change)="toggleSelection(tasinmaz)">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="icon-row text-center mt-4">
+    <div class="row">
+      <div class="col-md">
+        <a href="/add-tasinmaz" class="text-dark">
+          <i class="bi bi-plus-square-fill fa-3x"></i> <!-- EKLE -->
+        </a>
+      </div>
+      <div class="col">
+        <a  class="btn text-dark" (click)="navigateToUpdate()">
+          <i class="bi bi-arrow-repeat fa-3x"></i> <!-- GÜNCELLE -->
+        </a>
+      </div>
+      <div class="col">
+        <a   class="btn text-dark" (click)="deleteSelected()">
+          <i class="bi bi-trash3-fill fa-3x"></i> <!-- SİL -->
+        </a>
+      </div>
+      <div class="col">
+        <a href="/tasinmaz-table" class="text-dark">
+          <i class="bi bi-file-earmark-fill fa-3x"></i> <!-- GÖRÜNTÜLE -->
+        </a>
+      </div>
+    </div>
+  </div>
+  
+</div>
