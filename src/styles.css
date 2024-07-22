@@ -1,5 +1,6 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
 @import "~font-awesome/css/font-awesome.min.css";
+@import "~ol/ol.css";
 
 body{
 background: -moz-linear-gradient(270deg,#fff, #f8b500); /* FF3.6+ */

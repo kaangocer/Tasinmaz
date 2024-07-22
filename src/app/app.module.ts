@@ -4,7 +4,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
 import { TasinmazTableComponent } from './tasinmaz-table/tasinmaz-table.component';
-
 import { AddTasinmazComponent } from './add-tasinmaz/add-tasinmaz.component';
 import { HttpClientModule } from '@angular/common/http';
 import { IlService } from '../services/ilServices/il.service';
@@ -15,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { UpdateTasinmazComponent } from './update-tasinmaz/update-tasinmaz.component';
+import { MapComponent } from './map/map.component';
 
 
 
@@ -28,6 +28,8 @@ import { UpdateTasinmazComponent } from './update-tasinmaz/update-tasinmaz.compo
     AddTasinmazComponent,
    
     UpdateTasinmazComponent,
+   
+    MapComponent,
     
     
 
