@@ -19,6 +19,8 @@ export class TasinmazTableComponent implements OnInit {
   ilceler: any[] = [];
   mahalleler: any[] = [];
   selectedTasinmaz: any = null;
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
 
   constructor(
     private ilService: IlService,
@@ -27,9 +29,7 @@ export class TasinmazTableComponent implements OnInit {
     private tasinmazService: TasinmazService,
     private toastr: ToastrService,
     private router: Router
-  ) { 
-  
-  }
+  ) { }
 
   ngOnInit(): void {
     this.getTasinmazlar();
@@ -91,7 +91,6 @@ export class TasinmazTableComponent implements OnInit {
   }
 
   isSelected(tasinmaz: any): boolean {
-    
     return this.selectedTasinmaz === tasinmaz;
   } 
 
@@ -107,13 +106,13 @@ export class TasinmazTableComponent implements OnInit {
         this.toastr.success('Taşınmaz başarıyla silindi.', 'Başarılı');
         this.getTasinmazlar(); // Tabloyu yenile
         this.selectedTasinmaz = null; // Seçimi temizle
-        
       },
       error => {
         this.toastr.error('Taşınmaz silinirken bir hata oluştu.', 'Hata');
       }
     );
   }
+
   navigateToUpdate() {
     if (!this.selectedTasinmaz) {
       this.toastr.error('Güncellemek için bir taşınmaz seçin.', 'Hata');
@@ -125,5 +124,9 @@ export class TasinmazTableComponent implements OnInit {
   
     // ID'ye sahip olan sayfaya yönlendirin
     this.router.navigate([`/update-tasinmaz/${selectedItemId}`]);
-  } 
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
+  }
 }

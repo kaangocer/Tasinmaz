@@ -1,7 +1,5 @@
 <app-nav></app-nav>
-<div class="container2">
-  
-</div>
+<div class="container2"></div>
 <div class="container mt-4">
   <div class="table-responsive">
     <table class="table table-bordered table-hover">
@@ -20,7 +18,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let tasinmaz of tasinmazlar">
+        <tr *ngFor="let tasinmaz of tasinmazlar | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }">
           <td>{{ tasinmaz.tasinmazId }}</td>
           <td>{{ tasinmaz.ilAd }}</td>
           <td>{{ tasinmaz.ilceAd }}</td>
@@ -45,12 +43,12 @@
         </a>
       </div>
       <div class="col">
-        <a  class="btn text-dark" (click)="navigateToUpdate()">
+        <a class="btn text-dark" (click)="navigateToUpdate()">
           <i class="bi bi-arrow-repeat fa-3x"></i> <!-- GÜNCELLE -->
         </a>
       </div>
       <div class="col">
-        <a   class="btn text-dark" (click)="deleteSelected()">
+        <a class="btn text-dark" (click)="deleteSelected()">
           <i class="bi bi-trash3-fill fa-3x"></i> <!-- SİL -->
         </a>
       </div>
@@ -61,6 +59,7 @@
       </div>
     </div>
   </div>
- <div><app-map></app-map></div> 
+  <!-- Sayfalama -->
+  <pagination-controls (pageChange)="onPageChange($event)"></pagination-controls>
+  <div><app-map></app-map></div>
 </div>
-

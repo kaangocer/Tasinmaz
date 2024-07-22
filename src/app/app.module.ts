@@ -15,6 +15,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { UpdateTasinmazComponent } from './update-tasinmaz/update-tasinmaz.component';
 import { MapComponent } from './map/map.component';
+import { NgxPaginationModule } from 'ngx-pagination';
+
 
 
 
@@ -41,7 +43,8 @@ import { MapComponent } from './map/map.component';
     HttpClientModule,
     FormsModule,
     BrowserAnimationsModule, // Toastr için gerekli
-    ToastrModule.forRoot() // Toastr modülünü ekleyin
+    ToastrModule.forRoot(), // Toastr modülünü ekleyin
+    NgxPaginationModule
   ],
   providers: [IlService,
     IlceService,
