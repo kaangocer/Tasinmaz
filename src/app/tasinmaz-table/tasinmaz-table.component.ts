@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IlService } from '../../services/ilServices/il.service';
 import { IlceService } from '../../services/ilceServices/ilce.service';
 import { MahalleService } from '../../services/mahalleServices/mahalle.service';
 import { TasinmazService } from '../../services/tasinmazServices/tasinmaz.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-
+import { MapComponent } from '../map/map.component';
 
 @Component({
   selector: 'app-tasinmaz-table',
@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./tasinmaz-table.component.css']
 })
 export class TasinmazTableComponent implements OnInit {
+  @ViewChild(MapComponent) mapComponent: MapComponent;
   tasinmazlar: any[] = [];
   iller: any[] = [];
   ilceler: any[] = [];
@@ -81,6 +82,11 @@ export class TasinmazTableComponent implements OnInit {
       this.selectedTasinmaz = null; // Unselect if already selected
     } else {
       this.selectedTasinmaz = tasinmaz; // Select new item
+    }
+
+    if (this.selectedTasinmaz) {
+      const koordinatBilgileri = this.selectedTasinmaz.koordinatBilgileri.split(',').map(parseFloat);
+      this.mapComponent.setCenterAndZoom([koordinatBilgileri[1], koordinatBilgileri[0]], 10);
     }
   }
 

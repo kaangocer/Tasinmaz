@@ -71,7 +71,7 @@ export class MapComponent implements OnInit {
         this.vectorLayer
       ],
       view: new View({
-        center: fromLonLat([37.41, 8.82]),
+        center: fromLonLat([37.41, 8.82]), // Default center
         zoom: 4
       }),
       controls: [this.scaleLineControl]
@@ -113,27 +113,30 @@ export class MapComponent implements OnInit {
     });
   }
 
-  // Checkbox işlemleri için metodlar
-  isSelected(tasinmaz: any): boolean {
-    // Burada taşınmazın seçili olup olmadığını döndürün
-    // Örneğin, bir tasinmaz.selected gibi bir alanınız varsa onu kontrol edebilirsiniz
-    return tasinmaz.selected === true;
+  setCenterAndZoom(coordinates: [number, number], zoom: number): void {
+    const view = this.map.getView();
+    const transformedCoordinates = fromLonLat(coordinates);
+    view.setCenter(transformedCoordinates);
+    view.setZoom(zoom);
+
+    // Özel işaretçi ekle
+    this.addMarker(transformedCoordinates);
   }
 
-  toggleSelection(tasinmaz: any): void {
-    // Checkbox durumuna göre seçim işlemlerini yapın
-    tasinmaz.selected = !tasinmaz.selected;
-  
-    if (tasinmaz.selected) {
-      // Koordinat bilgilerini alın ve haritada gösterin
-      const koordinatBilgileri = tasinmaz.koordinatBilgileri.split(',').map(parseFloat);
-      const lonLat = fromLonLat([koordinatBilgileri[1], koordinatBilgileri[0]]);
-  
-      // View'i güncelleyin
-      this.map.getView().setCenter(lonLat);
-      this.map.getView().setZoom(12); // İstediğiniz zoom seviyesini ayarlayabilirsiniz
-    }
+  addMarker(coordinates: [number, number]): void {
+    this.vectorLayer.getSource().clear(); // Eski işaretçileri temizle
+
+    const marker = new Feature({
+      geometry: new Point(coordinates)
+    });
+
+    marker.setStyle(new Style({
+      image: new Icon({
+        anchor: [0.5, 1],
+        src: 'https://openlayers.org/en/latest/examples/data/icon.png'
+      })
+    }));
+
+    this.vectorLayer.getSource().addFeature(marker);
   }
-  
-  
 }
