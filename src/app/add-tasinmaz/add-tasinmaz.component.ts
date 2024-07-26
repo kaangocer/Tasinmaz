@@ -5,6 +5,7 @@ import { MahalleService } from '../../services/mahalleServices/mahalle.service';
 import { TasinmazService } from '../../services/tasinmazServices/tasinmaz.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-add-tasinmaz',
@@ -27,11 +28,14 @@ export class AddTasinmazComponent implements OnInit {
     private mahalleService: MahalleService,
     private tasinmazService: TasinmazService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private authService:AuthService
   ) { }
 
   ngOnInit(): void {
     this.getIller();
+    var id = this.authService.getCurrentUserId();
+    this.tasinmaz.kullaniciId = id;
   }
 
   getIller() {
@@ -84,6 +88,8 @@ export class AddTasinmazComponent implements OnInit {
   }
 
   onSubmit() {
+    
+    this.tasinmaz.Kullanıcı
     this.tasinmazService.addTasinmaz(this.tasinmaz).subscribe(
       () => {
         this.toastr.success('Taşınmaz başarıyla eklendi!', 'Başarılı');

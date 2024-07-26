@@ -6,6 +6,7 @@ import { TasinmazService } from '../../services/tasinmazServices/tasinmaz.servic
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { MapComponent } from '../map/map.component';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-tasinmaz-table',
@@ -28,7 +29,8 @@ export class TasinmazTableComponent implements OnInit {
     private mahalleService: MahalleService,
     private tasinmazService: TasinmazService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -36,11 +38,14 @@ export class TasinmazTableComponent implements OnInit {
   }
 
   getTasinmazlar() {
-    this.tasinmazService.getTasinmazlar().subscribe(tasinmazData => {
+    const id =this.authService.getCurrentUserId();
+    console.log(id);
+    this.tasinmazService.getTasinmazByKullaniciId(id).subscribe(tasinmazData => {
       this.tasinmazlar = tasinmazData;
       this.getIller();
     });
   }
+  
 
   getIller() {
     this.ilService.getIller().subscribe(ilData => {
@@ -119,12 +124,17 @@ export class TasinmazTableComponent implements OnInit {
       return;
     }
     
-    // Seçili taşınmazın ID'sini alın
     const selectedItemId = this.selectedTasinmaz.tasinmazId;
-  
-    // ID'ye sahip olan sayfaya yönlendirin
-    this.router.navigate([`/update-tasinmaz/${selectedItemId}`]);
+    console.log("Yönlendiriliyor:", `/update-tasinmaz/${selectedItemId}`);
+    this.router.navigate([`/update-tasinmaz/${selectedItemId}`]).then(success => {
+      if (success) {
+        console.log("Başarıyla yönlendirildi.");
+      } else {
+        console.log("Yönlendirme başarısız.");
+      }
+    });
   }
+  
 
   onPageChange(page: number) {
     this.currentPage = page;

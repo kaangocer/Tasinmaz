@@ -1,14 +1,15 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
 @import "~font-awesome/css/font-awesome.min.css";
 @import "~ol/ol.css";
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
 
 body{
-background: -moz-linear-gradient(270deg,#fff, #f8b500); /* FF3.6+ */
-background: -webkit-linear-gradient(270deg,#fff,#f8b500); /* Chrome10+,Safari5.1+ */
+background: -moz-linear-gradient(270deg,#fff, #00f84a); /* FF3.6+ */
+background: -webkit-linear-gradient(270deg,#fff,#00f80c); /* Chrome10+,Safari5.1+ */
 background: -o-linear-gradient(270deg,#fff,#f8b500); /* Opera11.10+ */
 background: -ms-linear-gradient(270deg,#fff,#f8b500); /* IE10+ */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fff', endColorstr='#f8b500',GradientType=0 ); /* IE6-9 */
-background: linear-gradient(270deg,#fff,#f8b500); /* W3C */
+background: linear-gradient(270deg,#fff,#026d14); /* W3C */
 width: 100%;
 height: 100vh;
 }

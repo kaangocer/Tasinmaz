@@ -2,7 +2,7 @@
   <form (ngSubmit)="onSubmit()" #tasinmazForm="ngForm">
     <div class="form-group">
       <label for="kullaniciId">Kullanıcı ID</label>
-      <input type="number" class="form-control" id="kullaniciId" required [(ngModel)]="tasinmaz.kullaniciId" name="kullaniciId">
+      <input type="number" class="form-control" id="kullaniciId" readonly required [(ngModel)]="tasinmaz.kullaniciId" name="kullaniciId">
     </div>
 
     <div class="form-group">

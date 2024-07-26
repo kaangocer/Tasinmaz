@@ -12,10 +12,20 @@ import { MahalleService } from '../services/mahalleServices/mahalle.service';
 import { TasinmazService } from '../services/tasinmazServices/tasinmaz.service';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { ToastrModule } from 'ngx-toastr';
 import { UpdateTasinmazComponent } from './update-tasinmaz/update-tasinmaz.component';
 import { MapComponent } from './map/map.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { LoginComponent } from './login/login.component';
+import { HttpModule } from '@angular/http';
+import { RegisterPopupComponent } from './register-popup/register-popup.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 
@@ -32,6 +42,10 @@ import { NgxPaginationModule } from 'ngx-pagination';
     UpdateTasinmazComponent,
    
     MapComponent,
+   
+    LoginComponent,
+   
+    RegisterPopupComponent,
     
     
 
@@ -44,12 +58,21 @@ import { NgxPaginationModule } from 'ngx-pagination';
     FormsModule,
     BrowserAnimationsModule, // Toastr için gerekli
     ToastrModule.forRoot(), // Toastr modülünü ekleyin
-    NgxPaginationModule
+    NgxPaginationModule,
+     MatButtonModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FlexLayoutModule,
+    HttpModule,
+    ReactiveFormsModule,
+    MatDialogModule,
   ],
   providers: [IlService,
     IlceService,
     MahalleService,
     TasinmazService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [RegisterPopupComponent]
 })
 export class AppModule { }

@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class TasinmazService {
 
-  private apiUrl = 'https://localhost:44301/api/tasinmaz'; // API'nin base URL'si
+  private apiUrl = 'https://localhost:44301/api/Tasinmaz'; // API'nin base URL'si
 
   constructor(private http: HttpClient) { }
 
@@ -18,6 +18,9 @@ export class TasinmazService {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 
+  getTasinmazByKullaniciId(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/GetByKullaniciId?id=${id}`);
+  }
 //EKLEME İŞLEMİ İÇİN EKLEDİGİM
 addTasinmaz(tasinmaz: any): Observable<any> {
   return this.http.post<any>(this.apiUrl, tasinmaz);

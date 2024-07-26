@@ -42,6 +42,7 @@ export class UpdateTasinmazComponent implements OnInit {
 
   loadTasinmaz() {
     const id = +this.route.snapshot.paramMap.get('id');
+    console.log(id);
     this.tasinmazService.getTasinmaz(id).subscribe(data => {
       this.tasinmaz = data;
       if (this.tasinmaz) {

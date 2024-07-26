@@ -1,0 +1,15 @@
+.login-container {
+    height: 100vh;
+    width: 100%;
+  }
+  
+  .login-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+  }
+  
+  .full-width {
+    width: 100%;
+  }
+  
