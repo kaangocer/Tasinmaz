@@ -26,6 +26,9 @@ import { HttpModule } from '@angular/http';
 import { RegisterPopupComponent } from './register-popup/register-popup.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
+import { AuthService } from './auth.service';
+import { UserManagementComponent } from './user-management/user-management.component';
+import { LogReportingComponent } from './log-reporting/log-reporting.component';
 
 
 
@@ -46,6 +49,10 @@ import { MatDialogModule } from '@angular/material/dialog';
     LoginComponent,
    
     RegisterPopupComponent,
+   
+    UserManagementComponent,
+   
+    LogReportingComponent,
     
     
 
@@ -71,7 +78,8 @@ import { MatDialogModule } from '@angular/material/dialog';
   providers: [IlService,
     IlceService,
     MahalleService,
-    TasinmazService],
+    TasinmazService,
+    AuthService],
   bootstrap: [AppComponent],
   entryComponents: [RegisterPopupComponent]
 })

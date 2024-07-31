@@ -115,7 +115,7 @@ export class UpdateTasinmazComponent implements OnInit {
         this.router.navigate(['/tasinmaz-table']);
       },
       error => {
-        this.toastr.error('Taşınmaz güncellenirken bir hata oluştu.', 'Hata');
+        this.toastr.error('Lütfen tüm alanları doldurun ve seçim yapın.', 'Hata');
       }
     );
   }

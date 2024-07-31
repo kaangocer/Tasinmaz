@@ -13,7 +13,7 @@
           <th>PARSEL</th>
           <th>NİTELİK</th>
           <th>KOORDİNAT BİLGİLERİ</th>
-          <th>KULLANICI ID</th>
+          <th *ngIf="isAdmin()">KULLANICI ID</th>
           <th>Seç</th> <!-- Yeni kolon: Seçim için checkbox -->
         </tr>
       </thead>
@@ -27,7 +27,7 @@
           <td>{{ tasinmaz.parsel }}</td>
           <td>{{ tasinmaz.nitelik }}</td>
           <td>{{ tasinmaz.koordinatBilgileri }}</td>
-          <td>{{ tasinmaz.kullaniciId }}</td>
+          <td *ngIf="isAdmin()">{{ tasinmaz.kullaniciId }}</td>
           <td>
             <input type="checkbox" [checked]="isSelected(tasinmaz)" (change)="toggleSelection(tasinmaz)">
           </td>
@@ -53,13 +53,16 @@
         </a>
       </div>
       <div class="col">
-        <a href="/tasinmaz-table" class="text-dark">
-          <i class="bi bi-file-earmark-fill fa-3x"></i> <!-- GÖRÜNTÜLE -->
-        </a>
-      </div>
+    <a class="btn text-dark" (click)="exportToExcel()">
+      <i class="bi bi-file-earmark-excel fa-3x"></i> <!-- Dışa Aktar -->
+    </a>
+  </div>
     </div>
   </div>
   <!-- Sayfalama -->
   <pagination-controls (pageChange)="onPageChange($event)"></pagination-controls>
+
+
+  
   <div><app-map></app-map></div>
 </div>

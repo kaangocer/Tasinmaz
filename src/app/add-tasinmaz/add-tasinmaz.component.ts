@@ -21,6 +21,7 @@ export class AddTasinmazComponent implements OnInit {
   filteredMahalleler: any[] = [];
   selectedIlId: number;
   selectedIlceId: number;
+  isSubmitting = false;
 
   constructor(
     private ilService: IlService,
@@ -88,8 +89,18 @@ export class AddTasinmazComponent implements OnInit {
   }
 
   onSubmit() {
-    
-    this.tasinmaz.Kullanıcı
+    // Eğer işlem zaten yapılıyorsa, bu işlemi durdur
+    if (this.isSubmitting) return;
+
+    // Form verilerini kontrol et
+    if (!this.selectedIlId || !this.selectedIlceId || !this.tasinmaz.mahalleId) {
+      this.toastr.error('Lütfen tüm alanları doldurun ve seçim yapın.', 'Hata');
+      return;
+    }
+
+    // İşlem başladığını belirt
+    this.isSubmitting = true;
+
     this.tasinmazService.addTasinmaz(this.tasinmaz).subscribe(
       () => {
         this.toastr.success('Taşınmaz başarıyla eklendi!', 'Başarılı');
@@ -97,6 +108,10 @@ export class AddTasinmazComponent implements OnInit {
       },
       error => {
         this.toastr.error('Taşınmaz eklenirken bir hata oluştu.', 'Hata');
+      },
+      () => {
+        // İşlem tamamlandığında butonu tekrar aktif hale getir
+        this.isSubmitting = false;
       }
     );
   }

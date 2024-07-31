@@ -33,7 +33,7 @@ export class AuthService {
       .subscribe(
         (response) => {
           const token = response.token;
-          console.log('API Yanıtı:', token); // Yanıtı kontrol edin
+          
           this.saveToken(token); // Token'ı kaydedin
           this.userToken = token;
           this.decodedToken = this.jwtHelper.decodeToken(token); // Token'ı decode edin
@@ -72,7 +72,7 @@ export class AuthService {
   loggedIn(): boolean {
     const token = localStorage.getItem(this.TOKEN_KEY);
     const isValidToken = token != null && !this.jwtHelper.isTokenExpired(token);
-    console.log('AuthService loggedIn:', isValidToken); // Burada kontrol edin
+    
     return isValidToken;
   }
   
@@ -82,9 +82,28 @@ export class AuthService {
   }
 
 
-  getCurrentUserId(){
-    return this.jwtHelper.decodeToken(this.token).nameid; // Kullanıcı ID'sini al
-  }
+  getCurrentUserId(): number | null {
+    if (!this.token) return null;
+    
+    const decodedToken = this.jwtHelper.decodeToken(this.token);
+     
 
+    return decodedToken['nameid'] || decodedToken['userId'] || null; // Kullanıcı ID'sini doğru claim ile alın
+  }
+  getCurrentUserRole(): string | null {
+    const token = localStorage.getItem(this.TOKEN_KEY); // TOKEN_KEY kullanılarak token alınır
+    if (!token) return null;
+
+    try {
+      const decodedToken = this.jwtHelper.decodeToken(token);
+      return decodedToken['role'] || null; // 'role' doğru claim alanı olmalıdır
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+  isAdmin(): boolean {
+    return this.getCurrentUserRole() === 'Admin';
+  }
 
 }

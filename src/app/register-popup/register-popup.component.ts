@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { AuthService } from '../auth.service';
 import { ToastrService } from 'ngx-toastr';
@@ -19,8 +19,8 @@ export class RegisterPopupComponent {
     private toastr: ToastrService // ToastrService ekledik
   ) {
     this.registerForm = this.fb.group({
-      Email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
+      Email: ['', [Validators.required, Validators.email, this.emailDomainValidator]],
+      password: ['', [Validators.required, this.passwordStrengthValidator]],
       confirmPassword: ['', [Validators.required]]
     }, {
       validator: this.passwordMatchValidator
@@ -34,6 +34,29 @@ export class RegisterPopupComponent {
     return password && confirmPassword && password.value !== confirmPassword.value
       ? { mismatch: true }
       : null;
+  }
+
+  emailDomainValidator(control: FormControl) {
+    const validDomains = ['hotmail.com', 'gmail.com'];
+    const email = control.value;
+    
+    if (!email) return null;
+
+    const domain = email.substring(email.lastIndexOf('@') + 1);
+    return validDomains.includes(domain) ? null : { invalidDomain: true };
+  }
+
+  passwordStrengthValidator(control: FormControl) {
+    const value = control.value;
+    if (!value) return null;
+    
+    const hasUpperCase = /[A-Z]/.test(value);
+    const hasLowerCase = /[a-z]/.test(value);
+    const hasNumeric = /[0-9]/.test(value);
+    const hasSpecial = /[+!@#$%^&*(),.?":{}|<>]/.test(value);
+
+    const valid = hasUpperCase && hasLowerCase && hasNumeric && hasSpecial;
+    return !valid ? { strongPassword: true } : null;
   }
 
   register() {

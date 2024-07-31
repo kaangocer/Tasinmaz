@@ -12,4 +12,21 @@
     background-color: #ffffff;
   }
 
-    
+  .icon-row {
+    display: flex;
+    justify-content: center;
+    gap: 150px; /* İkonlar arasındaki boşluğu ayarlar */
+  }
+  
+  .icon-row .col-md,
+  .icon-row .col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  /* ID ve Kullanıcı ID sütunlarını gizle */
+/* Tablodaki ID sütununu gizle */
+.table th:nth-child(1),
+.table td:nth-child(1) {
+  display: none;
+}

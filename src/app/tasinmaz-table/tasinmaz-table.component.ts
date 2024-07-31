@@ -7,6 +7,9 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { MapComponent } from '../map/map.component';
 import { AuthService } from '../auth.service';
+import { TasinmazDTO, IlDTO, IlceDTO, MahalleDTO } from '../../models/DTOs/tasinmaz-dto';
+import { ExportService } from '../export.service';
+
 
 @Component({
   selector: 'app-tasinmaz-table',
@@ -15,11 +18,11 @@ import { AuthService } from '../auth.service';
 })
 export class TasinmazTableComponent implements OnInit {
   @ViewChild(MapComponent) mapComponent: MapComponent;
-  tasinmazlar: any[] = [];
-  iller: any[] = [];
-  ilceler: any[] = [];
-  mahalleler: any[] = [];
-  selectedTasinmaz: any = null;
+  tasinmazlar: TasinmazDTO[] = [];
+  iller: IlDTO[] = [];
+  ilceler: IlceDTO[] = [];
+  mahalleler: MahalleDTO[] = [];
+  selectedTasinmaz: TasinmazDTO | null = null;
   currentPage: number = 1;
   itemsPerPage: number = 5;
 
@@ -30,7 +33,8 @@ export class TasinmazTableComponent implements OnInit {
     private tasinmazService: TasinmazService,
     private toastr: ToastrService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private exportService: ExportService
   ) { }
 
   ngOnInit(): void {
@@ -38,12 +42,26 @@ export class TasinmazTableComponent implements OnInit {
   }
 
   getTasinmazlar() {
-    const id =this.authService.getCurrentUserId();
-    console.log(id);
-    this.tasinmazService.getTasinmazByKullaniciId(id).subscribe(tasinmazData => {
-      this.tasinmazlar = tasinmazData;
-      this.getIller();
-    });
+    const userRole = this.authService.getCurrentUserRole(); // Kullanıcı rolünü almak için bir yöntem ekleyin
+  
+    if (userRole === 'Admin') {
+      // Admin rolü için tüm taşınmazları getir
+      this.tasinmazService.getAllProperties().subscribe(tasinmazData => {
+        this.tasinmazlar = tasinmazData;
+        this.getIller();
+      }, error => {
+        this.toastr.error('Taşınmazlar getirilirken bir hata oluştu.', 'Hata');
+      });
+    } else {
+      // Diğer kullanıcılar için kendi taşınmazlarını getir
+      const id = this.authService.getCurrentUserId();
+      this.tasinmazService.getTasinmazByKullaniciId(id).subscribe(tasinmazData => {
+        this.tasinmazlar = tasinmazData;
+        this.getIller();
+      }, error => {
+        this.toastr.error('Taşınmazlar getirilirken bir hata oluştu.', 'Hata');
+      });
+    }
   }
   
 
@@ -64,7 +82,7 @@ export class TasinmazTableComponent implements OnInit {
   getMahalleler() {
     this.mahalleService.getMahalleler().subscribe(mahalleData => {
       this.mahalleler = mahalleData;
-      this.mergeData();
+      this.mergeData(); 
     });
   }
 
@@ -82,7 +100,7 @@ export class TasinmazTableComponent implements OnInit {
     this.tasinmazlar.sort((a, b) => a.tasinmazId - b.tasinmazId);
   }
 
-  toggleSelection(tasinmaz: any) {
+  toggleSelection(tasinmaz: TasinmazDTO) {
     if (this.selectedTasinmaz === tasinmaz) {
       this.selectedTasinmaz = null; // Unselect if already selected
     } else {
@@ -95,7 +113,7 @@ export class TasinmazTableComponent implements OnInit {
     }
   }
 
-  isSelected(tasinmaz: any): boolean {
+  isSelected(tasinmaz: TasinmazDTO): boolean {
     return this.selectedTasinmaz === tasinmaz;
   } 
 
@@ -125,7 +143,6 @@ export class TasinmazTableComponent implements OnInit {
     }
     
     const selectedItemId = this.selectedTasinmaz.tasinmazId;
-    console.log("Yönlendiriliyor:", `/update-tasinmaz/${selectedItemId}`);
     this.router.navigate([`/update-tasinmaz/${selectedItemId}`]).then(success => {
       if (success) {
         console.log("Başarıyla yönlendirildi.");
@@ -135,8 +152,15 @@ export class TasinmazTableComponent implements OnInit {
     });
   }
   
-
   onPageChange(page: number) {
     this.currentPage = page;
+  }
+
+  exportToExcel(): void {
+    this.exportService.exportToExcel(this.tasinmazlar, 'tasinmazlar');
+  }
+
+  isAdmin(): boolean {
+    return this.authService.getCurrentUserRole() === 'Admin';
   }
 }
