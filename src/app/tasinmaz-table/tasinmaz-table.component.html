@@ -1,4 +1,32 @@
 <app-nav></app-nav>
+
+<div class="container mt-4">
+  <form (ngSubmit)="applyFilters()" #filterForm="ngForm">
+    <div class="row mb-3">
+      <div class="col-md-2">
+        <input type="text" class="form-control" placeholder="İl Adı" [(ngModel)]="filters.ilAd" name="ilAd">
+      </div>
+      <div class="col-md-2">
+        <input type="text" class="form-control" placeholder="İlçe Adı" [(ngModel)]="filters.ilceAd" name="ilceAd">
+      </div>
+      <div class="col-md-2">
+        <input type="text" class="form-control" placeholder="Mahalle Adı" [(ngModel)]="filters.mahalleAd" name="mahalleAd">
+      </div>
+      <div class="col-md-2">
+        <input type="text" class="form-control" placeholder="Ada" [(ngModel)]="filters.ada" name="ada">
+      </div>
+      <div class="col-md-2">
+        <input type="text" class="form-control" placeholder="Parsel" [(ngModel)]="filters.parsel" name="parsel">
+      </div>
+      <div class="col-md-2">
+        <input type="text" class="form-control" placeholder="Nitelik" [(ngModel)]="filters.nitelik" name="nitelik">
+      </div>
+      <div class="col-md-2" *ngIf="isAdmin()">
+        <input type="text" class="form-control" placeholder="Kullanıcı ID" [(ngModel)]="filters.kullaniciId" name="kullaniciId">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Filtrele</button>
+  </form>
 <div class="container2"></div>
 <div class="container mt-4">
   <div class="table-responsive">

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TasinmazDTO } from 'src/models/DTOs/tasinmaz-dto';
 import { AuthService } from 'src/app/auth.service';
@@ -20,8 +20,9 @@ export class TasinmazService {
   getTasinmaz(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
-  getTasinmazByKullaniciId(userId: number): Observable<TasinmazDTO[]> {
-    return this.http.get<TasinmazDTO[]>(`${this.apiUrl}/GetByKullaniciId?id=${userId}`);
+  getTasinmazByKullaniciId(userId: number, filters: any): Observable<TasinmazDTO[]> {
+    const params = this.createHttpParams(filters);
+    return this.http.get<TasinmazDTO[]>(`${this.apiUrl}/GetByKullaniciId?id=${userId}`, { params });
   }
   
  // getTasinmazByKullaniciId(id: number): Observable<any> {
@@ -53,12 +54,24 @@ updateTasinmaz(tasinmaz: any): Observable<any> {
   
   return this.http.put<any>(`${this.apiUrl}/${tasinmaz.tasinmazId}`, tasinmaz, { headers });
 }
+
  
 
-getAllProperties(): Observable<TasinmazDTO[]> {
+getAllProperties(filters: any): Observable<TasinmazDTO[]> {
+  const params = this.createHttpParams(filters);
   const headers = new HttpHeaders({
     'Authorization': `Bearer ${this.authService.token}` // Token'ı Authorization başlığına ekleyin
   });
-  return this.http.get<TasinmazDTO[]>(`${this.apiUrl}/GetAllProperties`, { headers: headers });
+  return this.http.get<TasinmazDTO[]>(`${this.apiUrl}/GetAllProperties`, { headers, params });
+}
+
+private createHttpParams(filters: any): HttpParams {
+  let params = new HttpParams();
+  for (const key in filters) {
+    if (filters.hasOwnProperty(key) && filters[key]) {
+      params = params.set(key, filters[key]);
+    }
+  }
+  return params;
 }
 }
