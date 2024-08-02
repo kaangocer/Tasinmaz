@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IlService } from '../../services/ilServices/il.service';
 import { IlceService } from '../../services/ilceServices/ilce.service';
 import { MahalleService } from '../../services/mahalleServices/mahalle.service';
@@ -6,6 +6,7 @@ import { TasinmazService } from '../../services/tasinmazServices/tasinmaz.servic
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../auth.service';
+import { MapComponent } from '../map/map.component'; // Harita bileşeni import edilmiştir
 
 @Component({
   selector: 'app-add-tasinmaz',
@@ -13,15 +14,16 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./add-tasinmaz.component.css']
 })
 export class AddTasinmazComponent implements OnInit {
+  @ViewChild(MapComponent) mapComponent: MapComponent; // Harita bileşeni referansı
+
   tasinmaz: any = {};
   iller: any[] = [];
   ilceler: any[] = [];
   mahalleler: any[] = [];
-  filteredIlceler: any[] = [];
-  filteredMahalleler: any[] = [];
   selectedIlId: number;
   selectedIlceId: number;
   isSubmitting = false;
+  isAdmin: boolean = false;
 
   constructor(
     private ilService: IlService,
@@ -30,13 +32,21 @@ export class AddTasinmazComponent implements OnInit {
     private tasinmazService: TasinmazService,
     private router: Router,
     private toastr: ToastrService,
-    private authService:AuthService
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
     this.getIller();
-    var id = this.authService.getCurrentUserId();
+    const id = this.authService.getCurrentUserId();
     this.tasinmaz.kullaniciId = id;
+    this.isAdmin = this.authService.isAdmin();
+
+    // Koordinat seçme işlevini ayarla
+    if (this.mapComponent) {
+      this.mapComponent.onCoordinatesSelected = (coordinates: [number, number]) => {
+        this.tasinmaz.koordinatBilgileri = coordinates.join(',');
+      };
+    }
   }
 
   getIller() {
@@ -46,7 +56,6 @@ export class AddTasinmazComponent implements OnInit {
   }
 
   onIlChange() {
-    // İl değiştiğinde ilçe ve mahalle değerlerini sıfırla
     this.selectedIlceId = null;
     this.resetIlceAndMahalle();
     if (this.selectedIlId) {
@@ -55,7 +64,6 @@ export class AddTasinmazComponent implements OnInit {
   }
 
   onIlceChange() {
-    // İlçe değiştiğinde mahalle değerini sıfırla ve yeni ilçeye ait mahalleleri getir
     this.resetMahalle();
     if (this.selectedIlceId) {
       this.getMahallelerByIlceId(this.selectedIlceId);
@@ -64,56 +72,38 @@ export class AddTasinmazComponent implements OnInit {
 
   resetIlceAndMahalle() {
     this.ilceler = [];
-    this.filteredIlceler = [];
     this.resetMahalle();
   }
 
   resetMahalle() {
     this.mahalleler = [];
-    this.filteredMahalleler = [];
     this.tasinmaz.mahalleId = null;
   }
 
   getIlceByIlId(ilId: number) {
     this.ilceService.getIlcelerByIlId(ilId).subscribe(data => {
       this.ilceler = data;
-      this.filteredIlceler = data;
     });
   }
 
   getMahallelerByIlceId(ilceId: number) {
     this.mahalleService.getMahallelerByIlceId(ilceId).subscribe(data => {
       this.mahalleler = data;
-      this.filteredMahalleler = data;
     });
   }
 
   onSubmit() {
-    // Eğer işlem zaten yapılıyorsa, bu işlemi durdur
-    if (this.isSubmitting) return;
-
-    // Form verilerini kontrol et
-    if (!this.selectedIlId || !this.selectedIlceId || !this.tasinmaz.mahalleId) {
-      this.toastr.error('Lütfen tüm alanları doldurun ve seçim yapın.', 'Hata');
-      return;
-    }
-
-    // İşlem başladığını belirt
     this.isSubmitting = true;
-
     this.tasinmazService.addTasinmaz(this.tasinmaz).subscribe(
       () => {
-        this.toastr.success('Taşınmaz başarıyla eklendi!', 'Başarılı');
-        this.router.navigate(['/tasinmaz-table']);
+        this.toastr.success('Taşınmaz başarıyla eklendi');
+        this.router.navigate(['/tasinmaz-list']);
       },
-      error => {
-        this.toastr.error('Taşınmaz eklenirken bir hata oluştu.', 'Hata');
-      },
-      () => {
-        // İşlem tamamlandığında butonu tekrar aktif hale getir
+      (error) => {
+        console.error('Taşınmaz eklenirken hata oluştu:', error);
+        this.toastr.error('Taşınmaz eklenirken hata oluştu');
         this.isSubmitting = false;
       }
     );
   }
-  
 }

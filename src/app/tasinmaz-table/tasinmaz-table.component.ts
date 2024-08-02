@@ -5,7 +5,7 @@ import { MahalleService } from '../../services/mahalleServices/mahalle.service';
 import { TasinmazService } from '../../services/tasinmazServices/tasinmaz.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { MapComponent } from '../map/map.component';
+import { Map2Component } from '../map2/map2.component';
 import { AuthService } from '../auth.service';
 import { TasinmazDTO, IlDTO, IlceDTO, MahalleDTO } from '../../models/DTOs/tasinmaz-dto';
 import { ExportService } from '../export.service';
@@ -17,7 +17,7 @@ import { ExportService } from '../export.service';
   styleUrls: ['./tasinmaz-table.component.css']
 })
 export class TasinmazTableComponent implements OnInit {
-  @ViewChild(MapComponent) mapComponent: MapComponent;
+  @ViewChild(Map2Component) mapComponent: Map2Component;
   tasinmazlar: TasinmazDTO[] = [];
   iller: IlDTO[] = [];
   ilceler: IlceDTO[] = [];
@@ -51,32 +51,32 @@ export class TasinmazTableComponent implements OnInit {
   }
 
   getTasinmazlar() {
-    const userRole = this.authService.getCurrentUserRole();
-    
-    if (userRole === 'Admin') {
-      this.tasinmazService.getAllProperties(this.filters).subscribe(
-        tasinmazData => {
-          this.tasinmazlar = tasinmazData;
-          this.getIller();
-        },
-        error => {
-          this.toastr.error('Taşınmazlar getirilirken bir hata oluştu.', 'Hata');
-        }
-      );
-    } else {
-      const id = this.authService.getCurrentUserId();
-      this.tasinmazService.getTasinmazByKullaniciId(id, this.filters).subscribe(
-        tasinmazData => {
-          this.tasinmazlar = tasinmazData;
-          this.getIller();
-        },
-        error => {
-          this.toastr.error('Taşınmazlar getirilirken bir hata oluştu.', 'Hata');
-        }
-      );
-    }
-  }
+  const userRole = this.authService.getCurrentUserRole();
   
+  if (userRole === 'Admin') {
+    this.tasinmazService.getAllProperties(this.filters).subscribe(
+      tasinmazData => {
+        this.tasinmazlar = tasinmazData;
+        this.getIller();
+      },
+      error => {
+        this.toastr.error('Taşınmazlar getirilirken bir hata oluştu.', 'Hata');
+      }
+    );
+  } else {
+    const id = this.authService.getCurrentUserId();
+    this.tasinmazService.getTasinmazByKullaniciId(id, this.filters).subscribe(
+      tasinmazData => {
+        this.tasinmazlar = tasinmazData;
+        this.getIller();
+      },
+      error => {
+        this.toastr.error('Taşınmazlar getirilirken bir hata oluştu.', 'Hata');
+      }
+    );
+  }
+}
+
   
 
   getIller() {

@@ -29,6 +29,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { AuthService } from './auth.service';
 import { UserManagementComponent } from './user-management/user-management.component';
 import { LogReportingComponent } from './log-reporting/log-reporting.component';
+import { Map2Component } from './map2/map2.component';
 
 
 
@@ -53,6 +54,8 @@ import { LogReportingComponent } from './log-reporting/log-reporting.component';
     UserManagementComponent,
    
     LogReportingComponent,
+   
+    Map2Component,
     
     
 

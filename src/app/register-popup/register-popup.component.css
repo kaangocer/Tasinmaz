@@ -1,76 +1,72 @@
-/* Pop-up genel düzeni */
 mat-dialog-content {
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    background-color: #f5f5f5;
-    border-radius: 8px;
-    overflow: hidden; /* Taşmayı engellemek için */
-  }
-  
-  /* Form alanlarının genişliği */
-  mat-form-field.full-width {
-    width: 80%; /* Genişliği %80 yaparak daha uyumlu bir görünüm sağla */
-    margin-bottom: 20px;
-  }
-  
-  /* Butonların hizalanması ve boyutlandırılması */
-  mat-dialog-actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-  }
-  
-  button {
-    margin-left: 10px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    background-color: #1976d2;
-    color: white;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  
-  button:hover {
-    background-color: #155a9c;
-  }
-  
-  /* Pop-up genel genişliği ve yüksekliği */
-  ::ng-deep .mat-dialog-container {
-    min-width: 400px; /* Minimum genişliği 400px yaparak daha kompakt hale getir */
-    max-width: 600px; /* Maksimum genişliği 600px ile sınırlandır */
-    max-height: 80vh; /* Yüksekliği ekranın %80'i ile sınırlandır */
-    border-radius: 8px;
-    padding: 0;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    overflow: auto; /* İçerik taştığında kaydırma çubuğu ekle */
-  }
-  
-  h1[mat-dialog-title] {
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-    margin: 0;
-    padding: 20px 0;
-    color: #333;
-  }
-  
-  mat-dialog-content {
-    padding: 20px;
-  }
-  
-  mat-dialog-actions {
-    padding: 20px;
-    border-top: 1px solid #ddd;
-  }
-  
-  .mat-form-field-wrapper {
-    padding-bottom: 10px;
-  }
-  
-  .mat-error {
-    font-size: 12px;
-    color: red;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  overflow: hidden;
+  padding-left: 40px; /* Soldan boşluk ekleyerek içeriği sağa kaydır */
+}
+
+mat-form-field.full-width {
+  width: 80%;
+  margin-bottom: 20px;
+  margin-left: 40px; /* Form alanlarını sağa kaydır */
+}
+
+mat-dialog-actions {
+  display: flex;
+  justify-content: center; /* Butonları ortala */
+  margin-top: 20px;
+}
+
+button {
+  margin-left: 70px; 
+  margin-right: 30px;
+  padding: 5px;
+  border: none;
+  border-radius: 10px;
+  background-color: #1976d2;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  min-width: 100px;
+}
+
+button:hover {
+  background-color: #155a9c;
+}
+
+::ng-deep .mat-dialog-container {
+  min-width: 400px;
+  max-width: 600px;
+  max-height: 80vh;
+  border-radius: 8px;
+  padding: 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: auto;
+}
+
+h1[mat-dialog-title] {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin: 0;
+  padding: 20px 0;
+  color: #333;
+}
+
+.mat-form-field-wrapper {
+  padding-bottom: 10px;
+}
+
+.mat-error {
+  font-size: 12px;
+  color: red;
+}
+
+.mat-hint {
+  font-size: 12px;
+  color: #555;
+  margin-left: 40px; /* Hints de sağa kaydır */
+}

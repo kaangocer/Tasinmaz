@@ -21,9 +21,20 @@ export class TasinmazService {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
   getTasinmazByKullaniciId(userId: number, filters: any): Observable<TasinmazDTO[]> {
-    const params = this.createHttpParams(filters);
-    return this.http.get<TasinmazDTO[]>(`${this.apiUrl}/GetByKullaniciId?id=${userId}`, { params });
-  }
+  const headers = new HttpHeaders({
+    'Authorization': `Bearer ${this.authService.token}` // Authorization başlığı ekleyin
+  });
+
+  const params = this.createHttpParams({ ...filters, id: userId });
+  
+  return this.http.get<TasinmazDTO[]>(`${this.apiUrl}/GetByKullaniciId`, {
+    headers,
+    params,
+    observe: 'body', // Body kısmını gözlemlemek için eklenebilir
+    responseType: 'json'
+  });
+}
+
   
  // getTasinmazByKullaniciId(id: number): Observable<any> {
  //   return this.http.get<any>(`${this.apiUrl}/GetByKullaniciId?id=${id}`);

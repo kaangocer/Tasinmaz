@@ -14,8 +14,9 @@ const routes: Routes = [{ path: 'tasinmaz-table', component: TasinmazTableCompon
 { path: 'user-management', component: UserManagementComponent, canActivate: [AdminGuard] },  
 { path: 'log-reporting', component: LogReportingComponent, canActivate: [AdminGuard] },
 {path:'add-tasinmaz',component: AddTasinmazComponent, canActivate:[AuthGuard]},
-  { path: 'login', component: LoginComponent },
-  { path: 'update-tasinmaz/:id', component: UpdateTasinmazComponent, canActivate: [AuthGuard] },
+{ path: 'update-tasinmaz/:id', component: UpdateTasinmazComponent, canActivate: [AuthGuard] },
+{ path: 'login', component: LoginComponent },
+ 
   { path: '**', redirectTo: 'login' },
   
   

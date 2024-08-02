@@ -14,6 +14,8 @@ import { ExportService } from '../export.service';
 export class LogReportingComponent implements OnInit {
   filter: any = {};
   logs: any[] = [];
+  p: number = 1; 
+  pageSize: number = 15;
 
   constructor(private logService: LogService, private toastr: ToastrService,private exportService: ExportService) {}
 

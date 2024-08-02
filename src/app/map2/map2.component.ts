@@ -15,14 +15,14 @@ import { TasinmazService } from '../../services/tasinmazServices/tasinmaz.servic
 import { AuthService } from 'src/app/auth.service';
 
 @Component({
-  selector: 'app-map',
-  templateUrl: './map.component.html',
-  styleUrls: ['./map.component.css']
+  selector: 'app-map2',
+  templateUrl: './map2.component.html',
+  styleUrls: ['./map2.component.css']
 })
-export class MapComponent implements OnInit {
+export class Map2Component implements OnInit {
   map: Map;
   vectorLayer: VectorLayer;
-  clickMarkerLayer: VectorLayer;
+ 
   osmLayer: TileLayer;
   googleMapsLayer: TileLayer;
   scaleLineControl: ScaleLine;
@@ -76,10 +76,7 @@ export class MapComponent implements OnInit {
       source: new VectorSource()
     });
 
-    // Tıklama marker'ları için ayrı bir VectorSource
-    this.clickMarkerLayer = new VectorLayer({
-      source: new VectorSource()
-    });
+    
 
     this.map = new Map({
       target: 'map',
@@ -87,7 +84,7 @@ export class MapComponent implements OnInit {
         this.osmLayer,
         this.googleMapsLayer,
         this.vectorLayer,
-        this.clickMarkerLayer // Tıklama marker'ları için layer'ı ekleyin
+        
       ],
       view: new View({
         center: fromLonLat([37.41, 8.82]),
@@ -100,7 +97,7 @@ export class MapComponent implements OnInit {
       const coordinates = event.coordinate;
       const lonLatCoordinates = toLonLat(coordinates);
       const latLonCoordinates: [number, number] = [lonLatCoordinates[1], lonLatCoordinates[0]];
-      this.addClickMarker(latLonCoordinates);
+      
       if (this.onCoordinatesSelected) {
         this.onCoordinatesSelected(latLonCoordinates);
       }
@@ -148,29 +145,11 @@ export class MapComponent implements OnInit {
     });
   }
 
-  addClickMarker(coordinates: [number, number]): void {
-    // Tıklama marker'larını temizleyin
-    this.clickMarkerLayer.getSource().clear();
-
-    const transformedCoordinates = fromLonLat([coordinates[1], coordinates[0]]);
-
-    const marker = new Feature({
-      geometry: new Point(transformedCoordinates)
-    });
-
-    marker.setStyle(new Style({
-      image: new Icon({
-        anchor: [0.5, 1],
-        src: 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-icon.png' // Tıklama ile gösterilecek özel ikon
-      })
-    }));
-
-    this.clickMarkerLayer.getSource().addFeature(marker);
-  }
+  
 
   setCenterAndZoom(coordinates: [number, number], zoom: number): void {
     const view = this.map.getView();
-    const transformedCoordinates = fromLonLat([coordinates[1], coordinates[0]]);
+    const transformedCoordinates = fromLonLat([coordinates[0], coordinates[1]]);
     view.setCenter(transformedCoordinates);
     view.setZoom(zoom);
 
