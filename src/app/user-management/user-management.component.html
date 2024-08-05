@@ -1,9 +1,6 @@
-
 <app-nav></app-nav>
 
 <div class="container mt-4">
-  
-
   <!-- Kullanıcı Listeleme -->
   <div class="custom-table-container">
     <h2>Kullanıcı İşlemleri</h2>
@@ -35,18 +32,18 @@
     <!-- Kullanıcı Ekleme Formu -->
     <div class="custom-form-container">
       <h2>Kullanıcı Ekle</h2>
-      <form (ngSubmit)="addUser()">
+      <form [formGroup]="addUserForm" (ngSubmit)="addUser()">
         <div class="form-group">
           <label for="email">Email</label>
-          <input type="email" id="email" [(ngModel)]="newUser.email" name="email" class="form-control" required>
+          <input type="email" id="email" formControlName="email" class="form-control">
         </div>
         <div class="form-group">
           <label for="password">Şifre</label>
-          <input type="password" id="password" [(ngModel)]="newUser.password" name="password" class="form-control" required>
+          <input type="password" id="password" formControlName="password" class="form-control">
         </div>
         <div class="form-group">
           <label for="role">Rol</label>
-          <input type="text" id="role" [(ngModel)]="newUser.role" name="role" class="form-control" required>
+          <input type="text" id="role" formControlName="role" class="form-control">
         </div>
         <button type="submit" class="btn btn-primary">Ekle</button>
       </form>
@@ -55,23 +52,22 @@
     <!-- Kullanıcı Güncelleme Formu -->
     <div *ngIf="selectedUser" class="custom-update-container">
       <h2>Kullanıcı Güncelle</h2>
-      <form (ngSubmit)="updateUser()">
+      <form [formGroup]="updateUserForm" (ngSubmit)="updateUser()">
         <div class="form-group">
           <label for="email">Email</label>
-          <input type="email" id="email" [(ngModel)]="selectedUser.email" name="email" class="form-control" required>
+          <input type="email" id="email" formControlName="email" class="form-control">
         </div>
         <div class="form-group">
           <label for="password">Şifre (Yeni şifre bırakılırsa mevcut şifre korunur)</label>
-          <input type="password" id="password" [(ngModel)]="selectedUser.password" name="password" class="form-control">
+          <input type="password" id="password" formControlName="password" class="form-control">
         </div>
         <div class="form-group">
           <label for="role">Rol</label>
-          <input type="text" id="role" [(ngModel)]="selectedUser.role" name="role" class="form-control" required>
+          <input type="text" id="role" formControlName="role" class="form-control">
         </div>
         <button type="submit" class="btn btn-primary">Güncelle</button>
         <button type="button" class="btn btn-secondary" (click)="selectedUser = null">İptal</button>
       </form>
     </div>
   </div>
-
 </div>

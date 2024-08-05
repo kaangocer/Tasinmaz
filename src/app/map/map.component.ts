@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
@@ -19,7 +19,7 @@ import { AuthService } from 'src/app/auth.service';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, AfterViewInit {
   map: Map;
   vectorLayer: VectorLayer;
   clickMarkerLayer: VectorLayer;
@@ -35,7 +35,13 @@ export class MapComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Burada haritayı başlatmak yerine sadece veri alıyoruz
     this.getTasinmazlarByUser();
+  }
+
+  ngAfterViewInit(): void {
+    // Harita başlatma işlevini burada çağırıyoruz
+    this.initializeMap();
   }
 
   getTasinmazlarByUser(): void {
@@ -44,7 +50,6 @@ export class MapComponent implements OnInit {
     this.tasinmazService.getTasinmazByKullaniciId(this.userId, filters).subscribe(
       (data) => {
         this.tasinmazlar = data;
-        this.initializeMap();
         this.addMarkers();
       },
       (error) => {
@@ -71,12 +76,10 @@ export class MapComponent implements OnInit {
 
     this.scaleLineControl = new ScaleLine();
 
-    // Ana marker'lar için VectorSource
     this.vectorLayer = new VectorLayer({
       source: new VectorSource()
     });
 
-    // Tıklama marker'ları için ayrı bir VectorSource
     this.clickMarkerLayer = new VectorLayer({
       source: new VectorSource()
     });
@@ -87,7 +90,7 @@ export class MapComponent implements OnInit {
         this.osmLayer,
         this.googleMapsLayer,
         this.vectorLayer,
-        this.clickMarkerLayer // Tıklama marker'ları için layer'ı ekleyin
+        this.clickMarkerLayer
       ],
       view: new View({
         center: fromLonLat([37.41, 8.82]),
@@ -149,7 +152,6 @@ export class MapComponent implements OnInit {
   }
 
   addClickMarker(coordinates: [number, number]): void {
-    // Tıklama marker'larını temizleyin
     this.clickMarkerLayer.getSource().clear();
 
     const transformedCoordinates = fromLonLat([coordinates[1], coordinates[0]]);
@@ -161,7 +163,7 @@ export class MapComponent implements OnInit {
     marker.setStyle(new Style({
       image: new Icon({
         anchor: [0.5, 1],
-        src: 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-icon.png' // Tıklama ile gösterilecek özel ikon
+        src: 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-icon.png'
       })
     }));
 
@@ -169,12 +171,19 @@ export class MapComponent implements OnInit {
   }
 
   setCenterAndZoom(coordinates: [number, number], zoom: number): void {
-    const view = this.map.getView();
-    const transformedCoordinates = fromLonLat([coordinates[1], coordinates[0]]);
-    view.setCenter(transformedCoordinates);
-    view.setZoom(zoom);
-
-    this.addMarker([coordinates[1], coordinates[0]]);
+    if (this.map) {
+      const view = this.map.getView();
+      if (view) {
+        const transformedCoordinates = fromLonLat(coordinates);
+        view.setCenter(transformedCoordinates);
+        view.setZoom(zoom);
+        this.addMarker([coordinates[1], coordinates[0]]);
+      } else {
+        console.error('Harita görünümü başlatılmamış.');
+      }
+    } else {
+      console.error('Harita başlatılmamış.');
+    }
   }
 
   addMarker(coordinates: [number, number]): void {

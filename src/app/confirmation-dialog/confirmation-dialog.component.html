@@ -1,0 +1,9 @@
+<!-- confirmation-dialog.component.html -->
+<h1 mat-dialog-title class="custom-dialog-title">Doğrulama</h1>
+<div mat-dialog-content class="custom-dialog-content">
+  <p>{{ data.message }}</p>
+</div>
+<div mat-dialog-actions class="custom-dialog-actions">
+  <button mat-button class="dialog-button no" (click)="onNoClick()">Hayır</button>
+  <button mat-button class="dialog-button yes" (click)="onYesClick()">Evet</button>
+</div>

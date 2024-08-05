@@ -1,8 +1,10 @@
-// user-management.component.ts
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { UserManagementService } from '../user-management.service';
 import { UserDTO } from '../models/UserDTO'; // UserDTO'yu import edin
 import { ToastrService } from 'ngx-toastr';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-user-management',
@@ -11,13 +13,31 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class UserManagementComponent implements OnInit {
   users: UserDTO[] = [];
-  newUser: UserDTO = { email: '', password: '', role: '' };
+  addUserForm: FormGroup;
+  updateUserForm: FormGroup;
   selectedUser: UserDTO | null = null;
   p: number = 1; // Başlangıç sayfası
+
   constructor(
+    private fb: FormBuilder,
     private userManagementService: UserManagementService,
-    private toastr: ToastrService
-  ) {}
+    private toastr: ToastrService,
+    private dialog: MatDialog
+  ) {
+    // Kullanıcı ekleme formunu oluştur
+    this.addUserForm = this.fb.group({
+      email: [''],
+      password: [''],
+      role: ['']
+    });
+
+    // Kullanıcı güncelleme formunu oluştur
+    this.updateUserForm = this.fb.group({
+      email: [''],
+      password: [''],
+      role: ['']
+    });
+  }
 
   ngOnInit(): void {
     this.loadUsers();
@@ -26,103 +46,104 @@ export class UserManagementComponent implements OnInit {
   loadUsers(): void {
     this.userManagementService.getAllUsers().subscribe(
       (data) => {
-        this.users = data
-          .sort((a, b) => {
-            // Admin kullanıcılar önce gelsin
-            if (a.role === 'Admin' && b.role !== 'Admin') {
-              return -1;
-            }
-            if (a.role !== 'Admin' && b.role === 'Admin') {
-              return 1;
-            }
-            // Eğer rol aynıysa KullaniciId'ye göre sırala
-            return a.kullaniciId - b.kullaniciId;
-          });
+        this.users = data.sort((a, b) => {
+          if (a.role === 'Admin' && b.role !== 'Admin') return -1;
+          if (a.role !== 'Admin' && b.role === 'Admin') return 1;
+          return a.kullaniciId - b.kullaniciId;
+        });
       },
       (error) => this.toastr.error('Kullanıcıları yüklerken bir hata oluştu.')
     );
   }
 
   addUser(): void {
-    // Email ve şifre boş mu kontrol et
-    if (!this.newUser.email || !this.newUser.password) {
-      this.toastr.error('Email ve şifre boş olamaz.');
-      return;
+    const newUser = this.addUserForm.value as UserDTO;
+    if (!newUser.role) {
+      newUser.role = 'User';
     }
 
-    // Rol boşsa "User" olarak ata
-    if (!this.newUser.role) {
-      this.newUser.role = 'User';
-    }
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: { message: 'Yeni kullanıcı eklensin mi?' }
+    });
 
-    this.userManagementService.addUser(this.newUser).subscribe(
-      () => {
-        this.toastr.success('Kullanıcı başarıyla eklendi.');
-        this.loadUsers(); // Kullanıcıları yeniden yükle
-        this.newUser = { email: '', password: '', role: '' }; // Formu sıfırla
-      },
-      (error) => {
-        if (error.status === 409) {
-          // 409 Conflict hatası aldığımızda kullanıcıya bilgi ver
-          this.toastr.error('Bu email adresi zaten kayıtlı.');
-        } else {
-          this.toastr.error('Kullanıcıyı eklerken bir hata oluştu.');
-        }
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.userManagementService.addUser(newUser).subscribe(
+          () => {
+            this.toastr.success('Kullanıcı başarıyla eklendi.');
+            this.loadUsers();
+            this.addUserForm.reset();
+          },
+          (error) => {
+            if (error.status === 409) {
+              this.toastr.error('Bu email adresi zaten kayıtlı.');
+            } else {
+              this.toastr.error('Kullanıcıyı eklerken bir hata oluştu.');
+            }
+          }
+        );
       }
-    );
+    });
   }
 
-
   editUser(user: UserDTO): void {
-    this.selectedUser = { ...user }; // Seçilen kullanıcıyı düzenleme için ayarla
+    this.selectedUser = { ...user };
+    this.updateUserForm.patchValue(user); // Güncelleme formunu doldur
   }
 
   updateUser(): void {
-    if (this.selectedUser) {
-      // Email boş olamaz
-      if (!this.selectedUser.email) {
-        this.toastr.error('Email boş olamaz.');
-        return;
-      }
-  
-      // Password boşsa önceki passwordu koru
-      if (!this.selectedUser.password) {
-        this.selectedUser.password = ''; // Eski şifreyi korumak için backend bu alanı yok saymalı
-      }
-  
-      // Role boşsa "User" olarak ata
-      if (!this.selectedUser.role) {
-        this.selectedUser.role = 'User';
-      }
-  
-      this.userManagementService.updateUser(this.selectedUser).subscribe(
-        () => {
-          this.toastr.success('Kullanıcı başarıyla güncellendi.');
-          this.loadUsers(); // Kullanıcıları yeniden yükle
-          this.selectedUser = null; // Düzenleme formunu kapat
-        },
-        (error) => {
-          if (error.status === 409) {
-            this.toastr.error('Bu email adresi başka bir kullanıcı tarafından kullanılıyor.');
-          } else if (error.status === 404) {
-            this.toastr.error('Kullanıcı bulunamadı.');
-          } else {
-            console.error('Kullanıcıyı güncellerken bir hata oluştu:', error);
-            this.toastr.error('Kullanıcıyı güncellerken bir hata oluştu.');
-          }
-        }
-      );
+    if (!this.selectedUser) {
+      this.toastr.error('Formu doğru doldurunuz.');
+      return;
     }
+
+    const updatedUser = { ...this.selectedUser, ...this.updateUserForm.value } as UserDTO;
+    if (!updatedUser.role) {
+      updatedUser.role = 'User';
+    }
+
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: { message: 'Kullanıcı bilgilerini değiştirmek istediğinize emin misiniz?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.userManagementService.updateUser(updatedUser).subscribe(
+          () => {
+            this.toastr.success('Kullanıcı başarıyla güncellendi.');
+            this.loadUsers();
+            this.selectedUser = null;
+            this.updateUserForm.reset();
+          },
+          (error) => {
+            if (error.status === 409) {
+              this.toastr.error('Bu email adresi başka bir kullanıcı tarafından kullanılıyor.');
+            } else if (error.status === 404) {
+              this.toastr.error('Kullanıcı bulunamadı.');
+            } else {
+              this.toastr.error('Kullanıcıyı güncellerken bir hata oluştu.');
+            }
+          }
+        );
+      }
+    });
   }
-  
 
   deleteUser(id: number): void {
-    this.userManagementService.deleteUser(id).subscribe(
-      () => {
-        this.toastr.success('Kullanıcı başarıyla silindi.');
-        this.loadUsers(); // Kullanıcıları yeniden yükle
-      },
-      (error) => this.toastr.error('Kullanıcıyı silerken bir hata oluştu.')
-    );
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: { message: 'Bu kullanıcıyı silmek istediğinize emin misiniz?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.userManagementService.deleteUser(id).subscribe(
+          () => {
+            this.toastr.success('Kullanıcı başarıyla silindi.');
+            this.loadUsers();
+          },
+          (error) => this.toastr.error('Kullanıcıyı silerken bir hata oluştu.')
+        );
+      }
+    });
   }
 }

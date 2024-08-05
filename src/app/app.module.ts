@@ -30,6 +30,7 @@ import { AuthService } from './auth.service';
 import { UserManagementComponent } from './user-management/user-management.component';
 import { LogReportingComponent } from './log-reporting/log-reporting.component';
 import { Map2Component } from './map2/map2.component';
+import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 
 
 
@@ -56,6 +57,10 @@ import { Map2Component } from './map2/map2.component';
     LogReportingComponent,
    
     Map2Component,
+   
+    ConfirmationDialogComponent,
+    
+    
     
     
 
@@ -84,6 +89,6 @@ import { Map2Component } from './map2/map2.component';
     TasinmazService,
     AuthService],
   bootstrap: [AppComponent],
-  entryComponents: [RegisterPopupComponent]
+  entryComponents: [RegisterPopupComponent,ConfirmationDialogComponent,]
 })
 export class AppModule { }

@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { IlService } from '../../services/ilServices/il.service';
 import { IlceService } from '../../services/ilceServices/ilce.service';
 import { MahalleService } from '../../services/mahalleServices/mahalle.service';
@@ -9,7 +10,8 @@ import { Map2Component } from '../map2/map2.component';
 import { AuthService } from '../auth.service';
 import { TasinmazDTO, IlDTO, IlceDTO, MahalleDTO } from '../../models/DTOs/tasinmaz-dto';
 import { ExportService } from '../export.service';
-
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-tasinmaz-table',
@@ -22,20 +24,14 @@ export class TasinmazTableComponent implements OnInit {
   iller: IlDTO[] = [];
   ilceler: IlceDTO[] = [];
   mahalleler: MahalleDTO[] = [];
-  selectedTasinmaz: TasinmazDTO | null = null;
+  selectedTasinmazlar: TasinmazDTO[] = [];
   currentPage: number = 1;
   itemsPerPage: number = 5;
-  filters = {
-    ilAd: '',
-    ilceAd: '',
-    mahalleAd: '',
-    ada: '',
-    parsel: '',
-    nitelik: '',
-    kullaniciId: ''
-  };
+  filterForm: FormGroup;
+  lastCheckedTasinmaz: TasinmazDTO;
 
   constructor(
+    private fb: FormBuilder,
     private ilService: IlService,
     private ilceService: IlceService,
     private mahalleService: MahalleService,
@@ -43,41 +39,56 @@ export class TasinmazTableComponent implements OnInit {
     private toastr: ToastrService,
     private router: Router,
     private authService: AuthService,
-    private exportService: ExportService
-  ) { }
+    private exportService: ExportService,
+    private dialog: MatDialog
+  ) {
+    this.filterForm = this.fb.group({
+      ilAd: [''],
+      ilceAd: [''],
+      mahalleAd: [''],
+      ada: [''],
+      parsel: [''],
+      nitelik: [''],
+      kullaniciId: ['']
+    });
+  }
 
   ngOnInit(): void {
     this.getTasinmazlar();
   }
 
   getTasinmazlar() {
-  const userRole = this.authService.getCurrentUserRole();
+    const userRole = this.authService.getCurrentUserRole();
   
-  if (userRole === 'Admin') {
-    this.tasinmazService.getAllProperties(this.filters).subscribe(
-      tasinmazData => {
-        this.tasinmazlar = tasinmazData;
-        this.getIller();
-      },
-      error => {
-        this.toastr.error('Taşınmazlar getirilirken bir hata oluştu.', 'Hata');
-      }
-    );
-  } else {
-    const id = this.authService.getCurrentUserId();
-    this.tasinmazService.getTasinmazByKullaniciId(id, this.filters).subscribe(
-      tasinmazData => {
-        this.tasinmazlar = tasinmazData;
-        this.getIller();
-      },
-      error => {
-        this.toastr.error('Taşınmazlar getirilirken bir hata oluştu.', 'Hata');
-      }
-    );
+    if (userRole === 'Admin') {
+      this.tasinmazService.getAllProperties(this.filterForm.value).subscribe(
+        tasinmazData => {
+          this.tasinmazlar = tasinmazData;
+          this.getIller();
+          
+          // Admin kullanıcıları için taşınmazları haritada göster
+          if (this.mapComponent) {
+            this.mapComponent.tasinmazlar = tasinmazData; // Map2Component için taşınmazları ilet
+            this.mapComponent.addMarkers(); // Haritada tüm taşınmazları göster
+          }
+        },
+        error => {
+          this.toastr.error('Taşınmazlar getirilirken bir hata oluştu.', 'Hata');
+        }
+      );
+    } else {
+      const id = this.authService.getCurrentUserId();
+      this.tasinmazService.getTasinmazByKullaniciId(id, this.filterForm.value).subscribe(
+        tasinmazData => {
+          this.tasinmazlar = tasinmazData;
+          this.getIller();
+        },
+        error => {
+          this.toastr.error('Taşınmazlar getirilirken bir hata oluştu.', 'Hata');
+        }
+      );
+    }
   }
-}
-
-  
 
   getIller() {
     this.ilService.getIller().subscribe(ilData => {
@@ -96,7 +107,7 @@ export class TasinmazTableComponent implements OnInit {
   getMahalleler() {
     this.mahalleService.getMahalleler().subscribe(mahalleData => {
       this.mahalleler = mahalleData;
-      this.mergeData(); 
+      this.mergeData();
     });
   }
 
@@ -115,57 +126,67 @@ export class TasinmazTableComponent implements OnInit {
   }
 
   toggleSelection(tasinmaz: TasinmazDTO) {
-    if (this.selectedTasinmaz === tasinmaz) {
-      this.selectedTasinmaz = null; // Unselect if already selected
+    const index = this.selectedTasinmazlar.indexOf(tasinmaz);
+
+    if (index === -1) {
+      this.selectedTasinmazlar.push(tasinmaz);
+      this.lastCheckedTasinmaz = tasinmaz;
     } else {
-      this.selectedTasinmaz = tasinmaz; // Select new item
+      this.selectedTasinmazlar.splice(index, 1);
+      this.lastCheckedTasinmaz = null;
     }
 
-    if (this.selectedTasinmaz) {
-      const koordinatBilgileri = this.selectedTasinmaz.koordinatBilgileri.split(',').map(parseFloat);
+    if (this.lastCheckedTasinmaz) {
+      const koordinatBilgileri = this.lastCheckedTasinmaz.koordinatBilgileri.split(',').map(parseFloat);
       this.mapComponent.setCenterAndZoom([koordinatBilgileri[1], koordinatBilgileri[0]], 10);
     }
   }
 
   isSelected(tasinmaz: TasinmazDTO): boolean {
-    return this.selectedTasinmaz === tasinmaz;
-  } 
-
-  deleteSelected() {
-    const selectedTasinmaz = this.selectedTasinmaz; // Seçili taşınmazı al
-    if (!selectedTasinmaz) {
-      this.toastr.warning('Lütfen silmek için bir taşınmaz seçin.', 'Uyarı');
-      return;
-    }
-
-    this.tasinmazService.deleteTasinmaz(selectedTasinmaz.tasinmazId).subscribe(
-      () => {
-        this.toastr.success('Taşınmaz başarıyla silindi.', 'Başarılı');
-        this.getTasinmazlar(); // Tabloyu yenile
-        this.selectedTasinmaz = null; // Seçimi temizle
-      },
-      error => {
-        this.toastr.error('Taşınmaz silinirken bir hata oluştu.', 'Hata');
-      }
-    );
+    return this.selectedTasinmazlar.includes(tasinmaz);
   }
 
-  navigateToUpdate() {
-    if (!this.selectedTasinmaz) {
-      this.toastr.error('Güncellemek için bir taşınmaz seçin.', 'Hata');
+  deleteSelected() {
+    if (this.selectedTasinmazlar.length === 0) {
+      this.toastr.warning('Lütfen silmek için taşınmaz seçin.', 'Uyarı');
       return;
     }
-    
-    const selectedItemId = this.selectedTasinmaz.tasinmazId;
-    this.router.navigate([`/update-tasinmaz/${selectedItemId}`]).then(success => {
-      if (success) {
-        console.log("Başarıyla yönlendirildi.");
-      } else {
-        console.log("Yönlendirme başarısız.");
+
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '250px',
+      data: { message: 'Silmek istediğinize emin misiniz?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.selectedTasinmazlar.forEach(tasinmaz => {
+          this.tasinmazService.deleteTasinmaz(tasinmaz.tasinmazId).subscribe(
+            () => {
+              this.toastr.success('Taşınmaz(lar) başarıyla silindi.', 'Başarılı');
+              this.getTasinmazlar();
+              this.selectedTasinmazlar = [];
+            },
+            error => {
+              this.toastr.error('Taşınmaz(lar) silinirken bir hata oluştu.', 'Hata');
+            }
+          );
+        });
       }
     });
   }
-  
+
+  navigateToUpdate() {
+    if (this.selectedTasinmazlar.length !== 1) {
+      this.toastr.error('Güncellemek için yalnızca bir taşınmaz seçin.', 'Hata');
+      return;
+    }
+
+    const selectedItemId = this.selectedTasinmazlar[0].tasinmazId;
+    this.router.navigate([`/update-tasinmaz/${selectedItemId}`]).then(success => {
+      // İsteğe bağlı işlemler
+    });
+  }
+
   onPageChange(page: number) {
     this.currentPage = page;
   }
@@ -179,13 +200,18 @@ export class TasinmazTableComponent implements OnInit {
   }
 
   applyFilters() {
-    const filters = this.filters; // Formdan gelen filtreleri al
+    const filters = this.filterForm.value;
     const userRole = this.authService.getCurrentUserRole();
-  
+
     if (userRole === 'Admin') {
       this.tasinmazService.getAllProperties(filters).subscribe(tasinmazData => {
         this.tasinmazlar = tasinmazData;
         this.getIller();
+        
+        if (this.mapComponent) {
+          this.mapComponent.tasinmazlar = tasinmazData;
+          this.mapComponent.addMarkers();
+        }
       }, error => {
         this.toastr.error('Taşınmazlar getirilirken bir hata oluştu.', 'Hata');
       });
@@ -199,6 +225,4 @@ export class TasinmazTableComponent implements OnInit {
       });
     }
   }
-  
-  
 }

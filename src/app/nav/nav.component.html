@@ -1,17 +1,17 @@
-<div><nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
-  <div class="container-fluid">
-    <div class="col-md-6">
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  </div><div class="col-md-6"><div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-    <div class="navbar-nav">
-      <a *ngIf="authService.isAdmin()" class="nav-link" href="/user-management">Kullanıcı İşlemleri</a>
-      <a *ngIf="authService.isAdmin() " class="nav-link" href="/log-reporting">Log İşlemleri</a>
-      <div><a class="nav-link" href="/tasinmaz-table">Mevcut Taşınmazlar Listesi</a></div>
-      <button (click)="logOut()">Logout</button>
+<div>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav ml-auto"> <!-- Burada ml-auto sınıfını ekledik -->
+          <a *ngIf="authService.isAdmin()" class="nav-link" routerLink="/user-management" routerLinkActive="active-link">Kullanıcı İşlemleri</a>
+          <a *ngIf="authService.isAdmin()" class="nav-link" routerLink="/log-reporting" routerLinkActive="active-link">Log İşlemleri</a>
+          <a class="nav-link" routerLink="/tasinmaz-table" routerLinkActive="active-link">Mevcut Taşınmazlar Listesi</a>
+          <button class="btn btn-danger" (click)="logOut()">Logout</button>
+        </div>
+      </div>
     </div>
-  </div></div>
-    
-  </div>
-</nav></div>
+  </nav>
+</div>

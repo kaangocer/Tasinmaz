@@ -1,109 +1,92 @@
-import { Injectable } from "@angular/core";
-import { LoginUser } from "./models/loginUser";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { JwtHelper, tokenNotExpired } from "angular2-jwt";
-import { Router } from "@angular/router";
-import { ToastrService } from "ngx-toastr";
-import { RegisterUser } from "./models/registerUser";
-import { Observable } from "rxjs";
-
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { JwtHelper } from 'angular2-jwt';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { Observable } from 'rxjs';
+import { LoginUser } from './models/loginUser';
+import { RegisterUser } from './models/registerUser';
+import { map } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root'
 })
 export class AuthService {
-  path = "https://localhost:44301/api/Auth/";
-  userToken: any;
-  decodedToken: any;
+  path = 'https://localhost:44301/api/Auth/';
+  TOKEN_KEY = 'token';
+  LAST_URL_KEY = 'lastUrl';
   jwtHelper: JwtHelper = new JwtHelper();
-  TOKEN_KEY="token";
-  LAST_URL_KEY = "lastUrl";
+
   constructor(
     private httpClient: HttpClient,
     private router: Router,
-    private toastr: ToastrService // ToastrService injected
+    private toastr: ToastrService
   ) {}
 
-  login(loginUser: LoginUser) {
+  login(loginUser: LoginUser): Observable<any> {
     let headers = new HttpHeaders();
-    headers = headers.append("Content-Type", "application/json");
-  
-    this.httpClient
-      .post<{ token: string }>(this.path + "login", loginUser, { headers: headers })
-      .subscribe(
-        (response) => {
+    headers = headers.append('Content-Type', 'application/json');
+
+    return this.httpClient
+      .post<{ token: string }>(this.path + 'login', loginUser, { headers: headers })
+      .pipe(
+        map(response => {
           const token = response.token;
+          this.saveToken(token);
           
-          this.saveToken(token); // Token'ı kaydedin
-          this.userToken = token;
-          this.decodedToken = this.jwtHelper.decodeToken(token); // Token'ı decode edin
-          this.toastr.success("Başarıyla giriş yaptınız!", "Başarılı"); // Başarı mesajı
-          const lastUrl = localStorage.getItem(this.LAST_URL_KEY) || '/tasinmaz-table'; // Son URL'yi al veya varsayılan olarak yönlendir
-          this.router.navigateByUrl(lastUrl); // Yönlendirme
-          localStorage.removeItem(this.LAST_URL_KEY); // URL'yi temizle
-        },
-        (error) => {
-          console.error('Giriş Hatası:', error);
-          this.toastr.error(
-            "Giriş başarısız. Lütfen bilgilerinizi kontrol edin.",
-            "Hata"
-          );
-        }
+          const lastUrl = localStorage.getItem(this.LAST_URL_KEY) || '/tasinmaz-table';
+          this.router.navigateByUrl(lastUrl);
+          localStorage.removeItem(this.LAST_URL_KEY);
+        })
       );
   }
-  
 
   register(registerUser: RegisterUser): Observable<any> {
     let headers = new HttpHeaders();
-    headers = headers.append("Content-Type", "application/json");
-    return this.httpClient.post(this.path + "register", registerUser, { headers: headers });
+    headers = headers.append('Content-Type', 'application/json');
+    return this.httpClient.post(this.path + 'register', registerUser, { headers: headers });
   }
 
-  saveToken(token) {
+  saveToken(token: string) {
     localStorage.setItem(this.TOKEN_KEY, token);
   }
 
   logOut(): void {
     localStorage.removeItem(this.TOKEN_KEY);
-    this.toastr.success('Başarıyla çıkış yapıldı.', 'Çıkış Başarılı'); // Başarı mesajı
-    this.router.navigateByUrl('/login'); // Kullanıcıyı giriş sayfasına yönlendir
+    this.toastr.success('Başarıyla çıkış yapıldı.', 'Çıkış Başarılı');
+    this.router.navigateByUrl('/login');
   }
 
   loggedIn(): boolean {
     const token = localStorage.getItem(this.TOKEN_KEY);
     const isValidToken = token != null && !this.jwtHelper.isTokenExpired(token);
-    
     return isValidToken;
   }
-  
 
-  get token(){
+  get token() {
     return localStorage.getItem(this.TOKEN_KEY);
   }
 
-
   getCurrentUserId(): number | null {
-    if (!this.token) return null;
-    
-    const decodedToken = this.jwtHelper.decodeToken(this.token);
-     
-
-    return decodedToken['nameid'] || decodedToken['userId'] || null; // Kullanıcı ID'sini doğru claim ile alın
-  }
-  getCurrentUserRole(): string | null {
-    const token = localStorage.getItem(this.TOKEN_KEY); // TOKEN_KEY kullanılarak token alınır
+    const token = this.token;
     if (!token) return null;
+    const decodedToken = this.jwtHelper.decodeToken(token);
+    return decodedToken['nameid'] || decodedToken['userId'] || null;
+  }
 
+  getCurrentUserRole(): string | null {
+    const token = this.token;
+    if (!token) return null;
     try {
       const decodedToken = this.jwtHelper.decodeToken(token);
-      return decodedToken['role'] || null; // 'role' doğru claim alanı olmalıdır
+      return decodedToken['role'] || null;
     } catch (error) {
       console.error('Error decoding token:', error);
       return null;
     }
   }
+
   isAdmin(): boolean {
     return this.getCurrentUserRole() === 'Admin';
   }
-
 }

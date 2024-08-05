@@ -16,7 +16,7 @@ export class RegisterPopupComponent {
     private fb: FormBuilder,
     private authService: AuthService,
     public dialogRef: MatDialogRef<RegisterPopupComponent>,
-    private toastr: ToastrService // ToastrService ekledik
+    private toastr: ToastrService
   ) {
     this.registerForm = this.fb.group({
       Email: ['', [Validators.required, Validators.email, this.emailDomainValidator]],
@@ -39,7 +39,7 @@ export class RegisterPopupComponent {
   emailDomainValidator(control: FormControl) {
     const validDomains = ['hotmail.com', 'gmail.com'];
     const email = control.value;
-    
+
     if (!email) return null;
 
     const domain = email.substring(email.lastIndexOf('@') + 1);
@@ -49,7 +49,7 @@ export class RegisterPopupComponent {
   passwordStrengthValidator(control: FormControl) {
     const value = control.value;
     if (!value) return null;
-    
+
     const hasUpperCase = /[A-Z]/.test(value);
     const hasLowerCase = /[a-z]/.test(value);
     const hasNumeric = /[0-9]/.test(value);
@@ -68,7 +68,7 @@ export class RegisterPopupComponent {
     this.authService.register(this.registerForm.value).subscribe({
       next: () => {
         this.toastr.success('Kayıt başarılı!', 'Başarılı');
-        this.dialogRef.close(); // Popup'ı kapat
+        this.dialogRef.close();
       },
       error: (error) => {
         this.toastr.error('Kayıt başarısız. Lütfen tekrar deneyin.', 'Hata');

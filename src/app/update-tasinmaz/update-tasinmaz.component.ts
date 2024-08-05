@@ -6,7 +6,9 @@ import { MahalleService } from '../../services/mahalleServices/mahalle.service';
 import { TasinmazService } from '../../services/tasinmazServices/tasinmaz.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../auth.service';
-import { MapComponent } from '../map/map.component'; // Harita bileşeni import edilmiştir
+import { MapComponent } from '../map/map.component'; 
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-update-tasinmaz',
@@ -32,7 +34,8 @@ export class UpdateTasinmazComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private toastr: ToastrService,
-    private authService: AuthService
+    private authService: AuthService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -57,25 +60,37 @@ export class UpdateTasinmazComponent implements OnInit {
     const id = +this.route.snapshot.paramMap.get('id');
     this.tasinmazService.getTasinmaz(id).subscribe(data => {
       this.tasinmaz = data;
-      if (this.tasinmaz) {
-        this.selectedIlId = this.tasinmaz.ilId;
-        this.selectedIlceId = this.tasinmaz.ilceId;
+  
+      if (this.tasinmaz && this.tasinmaz.mahalle) {
+        const mahalle = this.tasinmaz.mahalle;
+        this.selectedIlceId = mahalle.ilceId;
+        if (mahalle.ilce && mahalle.ilce.il) {
+          this.selectedIlId = mahalle.ilce.il.ilId;
+        } else {
+          console.error('İlçe veya İl bilgisi mevcut değil:', mahalle.ilce);
+          this.toastr.error('İlçe veya İl bilgisi bulunamadı.', 'Hata');
+        }
+  
+        // İl ve ilçe bilgilerini al
         this.getIlceByIlId(this.selectedIlId);
         this.getMahallelerByIlceId(this.selectedIlceId);
-        // Koordinatları harita merkezine yerleştir
+  
+        // Koordinat bilgileri mevcutsa haritayı güncelle
         if (this.tasinmaz.koordinatBilgileri) {
           const coordinates = this.tasinmaz.koordinatBilgileri.split(',').map(Number);
           this.mapComponent.setCenterAndZoom([coordinates[1], coordinates[0]], 10); // [longitude, latitude] formatında
         }
+  
       } else {
-        console.error('Taşınmaz verisi bulunamadı:', data);
-        this.toastr.error('Taşınmaz verisi bulunamadı.', 'Hata');
+        console.error('Mahalle bilgisi mevcut değil:', this.tasinmaz);
+        this.toastr.error('Mahalle bilgisi bulunamadı.', 'Hata');
       }
     }, error => {
       console.error('Taşınmaz yüklenirken bir hata oluştu:', error);
       this.toastr.error('Taşınmaz yüklenirken bir hata oluştu.', 'Hata');
     });
   }
+  
 
   onIlChange() {
     this.selectedIlceId = null;
@@ -115,24 +130,32 @@ export class UpdateTasinmazComponent implements OnInit {
   }
 
   onSubmit() {
-    // Checkboxların seçildiğini kontrol et
     if (!this.selectedIlId || !this.selectedIlceId || !this.tasinmaz.mahalleId) {
       this.toastr.error('Lütfen tüm alanları doldurun ve seçim yapın.', 'Hata');
       return;
     }
-
-    this.tasinmaz.ilId = this.selectedIlId;
-    this.tasinmaz.ilceId = this.selectedIlceId;
-
-    this.tasinmazService.updateTasinmaz(this.tasinmaz).subscribe(
-      () => {
-        this.toastr.success('Taşınmaz başarıyla güncellendi!', 'Başarılı');
-        this.router.navigate(['/tasinmaz-list']);
-      },
-      error => {
-        console.error('Taşınmaz güncellenirken hata oluştu:', error);
-        this.toastr.error('Taşınmaz güncellenirken bir hata oluştu.', 'Hata');
+  
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '300px',
+      data: { message: 'Güncellemek istediğinize emin misiniz?' }
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.tasinmaz.ilId = this.selectedIlId;
+        this.tasinmaz.ilceId = this.selectedIlceId;
+  
+        this.tasinmazService.updateTasinmaz(this.tasinmaz).subscribe(
+          () => {
+            this.toastr.success('Taşınmaz başarıyla güncellendi!', 'Başarılı');
+            this.router.navigate(['/tasinmaz-list']);
+          },
+          error => {
+            console.error('Taşınmaz güncellenirken hata oluştu:', error);
+            this.toastr.error('Taşınmaz güncellenirken bir hata oluştu.', 'Hata');
+          }
+        );
       }
-    );
+    });
   }
 }

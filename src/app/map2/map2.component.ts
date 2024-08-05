@@ -22,7 +22,6 @@ import { AuthService } from 'src/app/auth.service';
 export class Map2Component implements OnInit {
   map: Map;
   vectorLayer: VectorLayer;
- 
   osmLayer: TileLayer;
   googleMapsLayer: TileLayer;
   scaleLineControl: ScaleLine;
@@ -35,22 +34,36 @@ export class Map2Component implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initializeMap();
     this.getTasinmazlarByUser();
   }
 
   getTasinmazlarByUser(): void {
-    const filters = {}; // Filtrelerinizi buraya ekleyebilirsiniz
+    // Admin kontrolünü burada yapın
+    const userRole = this.authService.getCurrentUserRole();
+    const filters = {};
 
-    this.tasinmazService.getTasinmazByKullaniciId(this.userId, filters).subscribe(
-      (data) => {
-        this.tasinmazlar = data;
-        this.initializeMap();
-        this.addMarkers();
-      },
-      (error) => {
-        console.error('Tasinmazlar alınırken hata oluştu:', error);
-      }
-    );
+    if (userRole === 'Admin') {
+      this.tasinmazService.getAllProperties(filters).subscribe(
+        (data) => {
+          this.tasinmazlar = data;
+          this.addMarkers();
+        },
+        (error) => {
+          console.error('Tasinmazlar alınırken hata oluştu:', error);
+        }
+      );
+    } else {
+      this.tasinmazService.getTasinmazByKullaniciId(this.userId, filters).subscribe(
+        (data) => {
+          this.tasinmazlar = data;
+          this.addMarkers();
+        },
+        (error) => {
+          console.error('Tasinmazlar alınırken hata oluştu:', error);
+        }
+      );
+    }
   }
 
   initializeMap(): void {
@@ -76,15 +89,12 @@ export class Map2Component implements OnInit {
       source: new VectorSource()
     });
 
-    
-
     this.map = new Map({
       target: 'map',
       layers: [
         this.osmLayer,
         this.googleMapsLayer,
-        this.vectorLayer,
-        
+        this.vectorLayer
       ],
       view: new View({
         center: fromLonLat([37.41, 8.82]),
@@ -122,16 +132,13 @@ export class Map2Component implements OnInit {
     }
   }
 
-  addMarkers(): void {
+  addMarkers() {
     this.vectorLayer.getSource().clear();
 
     this.tasinmazlar.forEach(tasinmaz => {
-      const koordinatBilgileri = tasinmaz.koordinatBilgileri.split(',').map(Number);
-      const latLonCoordinates: [number, number] = [koordinatBilgileri[1], koordinatBilgileri[0]];
-      const transformedCoordinates = fromLonLat(latLonCoordinates);
-
+      const koordinatBilgileri = tasinmaz.koordinatBilgileri.split(',').map(parseFloat);
       const marker = new Feature({
-        geometry: new Point(transformedCoordinates)
+        geometry: new Point(fromLonLat([koordinatBilgileri[1], koordinatBilgileri[0]]))
       });
 
       marker.setStyle(new Style({

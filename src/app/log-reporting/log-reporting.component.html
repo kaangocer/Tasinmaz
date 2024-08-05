@@ -2,18 +2,18 @@
 
 <div class="container mt-4">
   <h2 class="mb-4">Log Raporlama</h2>
-  <form (ngSubmit)="onFilter()">
+  <form [formGroup]="filterForm" (ngSubmit)="onFilter()">
     <div class="row">
       <!-- Kullanıcı ID -->
       <div class="col-md-4 mb-3">
         <label for="kullaniciId" class="form-label custom-label">Kullanıcı ID</label>
-        <input type="number" class="form-control custom-input" id="kullaniciId" [(ngModel)]="filter.kullaniciId" name="kullaniciId">
+        <input type="number" class="form-control custom-input" id="kullaniciId" formControlName="kullaniciId">
       </div>
 
       <!-- Durum -->
       <div class="col-md-4 mb-3">
         <label for="durumId" class="form-label custom-label">Durum</label>
-        <select class="form-select custom-select" id="durumId" [(ngModel)]="filter.durumId" name="durumId">
+        <select class="form-select custom-select" id="durumId" formControlName="durumId">
           <option value="">Hepsi</option>
           <option value="1">Başarılı</option>
           <option value="2">Başarısız</option>
@@ -23,7 +23,7 @@
       <!-- İşlem Tipi -->
       <div class="col-md-4 mb-3">
         <label for="islemTipId" class="form-label custom-label">İşlem Tipi</label>
-        <select class="form-select custom-select" id="islemTipId" [(ngModel)]="filter.islemTipId" name="islemTipId">
+        <select class="form-select custom-select" id="islemTipId" formControlName="islemTipId">
           <option value="">Hepsi</option>
           <option value="1">Yeni Kayıt</option>
           <option value="2">Güncelleme</option>
@@ -34,13 +34,19 @@
       <!-- Açıklama -->
       <div class="col-md-4 mb-3">
         <label for="aciklama" class="form-label custom-label">Açıklama</label>
-        <input type="text" class="form-control custom-input" id="aciklama" [(ngModel)]="filter.aciklama" name="aciklama">
+        <input type="text" class="form-control custom-input" id="aciklama" formControlName="aciklama">
       </div>
 
       <!-- Tarih -->
       <div class="col-md-4 mb-3">
         <label for="tarihSaat" class="form-label custom-label">Tarih</label>
-        <input type="date" class="form-control custom-input" id="tarihSaat" [(ngModel)]="filter.tarihSaat" name="tarihSaat">
+        <input type="date" class="form-control custom-input" id="tarihSaat" formControlName="tarihSaat">
+      </div>
+
+      <!-- Kullanıcı IP -->
+      <div class="col-md-4 mb-3">
+        <label for="kullaniciIp" class="form-label custom-label">Kullanıcı IP</label>
+        <input type="text" class="form-control custom-input" id="kullaniciIp" formControlName="kullaniciIp">
       </div>
     </div>
 

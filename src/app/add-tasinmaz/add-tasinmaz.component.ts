@@ -7,6 +7,9 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../auth.service';
 import { MapComponent } from '../map/map.component'; // Harita bileşeni import edilmiştir
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-add-tasinmaz',
@@ -32,7 +35,8 @@ export class AddTasinmazComponent implements OnInit {
     private tasinmazService: TasinmazService,
     private router: Router,
     private toastr: ToastrService,
-    private authService: AuthService
+    private authService: AuthService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -93,17 +97,28 @@ export class AddTasinmazComponent implements OnInit {
   }
 
   onSubmit() {
-    this.isSubmitting = true;
-    this.tasinmazService.addTasinmaz(this.tasinmaz).subscribe(
-      () => {
-        this.toastr.success('Taşınmaz başarıyla eklendi');
-        this.router.navigate(['/tasinmaz-list']);
-      },
-      (error) => {
-        console.error('Taşınmaz eklenirken hata oluştu:', error);
-        this.toastr.error('Taşınmaz eklenirken hata oluştu');
-        this.isSubmitting = false;
+    
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '300px',
+      data: { message: 'Taşınmazı eklemek istediğinizden emin misiniz?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.isSubmitting = true;
+        this.tasinmazService.addTasinmaz(this.tasinmaz).subscribe(
+          () => {
+            this.toastr.success('Taşınmaz başarıyla eklendi');
+            this.router.navigate(['/tasinmaz-list']);
+          },
+          (error) => {
+            console.error('Taşınmaz eklenirken hata oluştu:', error);
+            this.toastr.error('Taşınmaz eklenirken hata oluştu');
+            this.isSubmitting = false;
+          }
+        );
       }
-    );
+    });
   }
+
 }

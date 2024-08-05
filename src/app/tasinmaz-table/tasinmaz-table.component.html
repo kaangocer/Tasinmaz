@@ -1,96 +1,99 @@
 <app-nav></app-nav>
 
 <div class="container mt-4">
-  <form (ngSubmit)="applyFilters()" #filterForm="ngForm">
+  <form [formGroup]="filterForm" (ngSubmit)="applyFilters()">
     <div class="row mb-3">
       <div class="col-md-2">
-        <input type="text" class="form-control" placeholder="İl Adı" [(ngModel)]="filters.ilAd" name="ilAd">
+        <input type="text" class="form-control" placeholder="İl Adı" formControlName="ilAd">
       </div>
       <div class="col-md-2">
-        <input type="text" class="form-control" placeholder="İlçe Adı" [(ngModel)]="filters.ilceAd" name="ilceAd">
+        <input type="text" class="form-control" placeholder="İlçe Adı" formControlName="ilceAd">
       </div>
       <div class="col-md-2">
-        <input type="text" class="form-control" placeholder="Mahalle Adı" [(ngModel)]="filters.mahalleAd" name="mahalleAd">
+        <input type="text" class="form-control" placeholder="Mahalle Adı" formControlName="mahalleAd">
       </div>
       <div class="col-md-2">
-        <input type="text" class="form-control" placeholder="Ada" [(ngModel)]="filters.ada" name="ada">
+        <input type="text" class="form-control" placeholder="Ada" formControlName="ada">
       </div>
       <div class="col-md-2">
-        <input type="text" class="form-control" placeholder="Parsel" [(ngModel)]="filters.parsel" name="parsel">
+        <input type="text" class="form-control" placeholder="Parsel" formControlName="parsel">
       </div>
       <div class="col-md-2">
-        <input type="text" class="form-control" placeholder="Nitelik" [(ngModel)]="filters.nitelik" name="nitelik">
+        <input type="text" class="form-control" placeholder="Nitelik" formControlName="nitelik">
       </div>
       <div class="col-md-2" *ngIf="isAdmin()">
-        <input type="text" class="form-control" placeholder="Kullanıcı ID" [(ngModel)]="filters.kullaniciId" name="kullaniciId">
+        <input type="text" class="form-control" placeholder="Kullanıcı ID" formControlName="kullaniciId">
       </div>
     </div>
     <button type="submit" class="btn btn-primary">Filtrele</button>
   </form>
-<div class="container2"></div>
-<div class="container mt-4">
-  <div class="table-responsive">
-    <table class="table table-bordered table-hover">
-      <thead class="thead-dark">
-        <tr>
-          <th>ID</th>
-          <th>İL ADI</th>
-          <th>İLÇE ADI</th>
-          <th>MAHALLE ADI</th>
-          <th>ADA</th>
-          <th>PARSEL</th>
-          <th>NİTELİK</th>
-          <th>KOORDİNAT BİLGİLERİ</th>
-          <th *ngIf="isAdmin()">KULLANICI ID</th>
-          <th>Seç</th> <!-- Yeni kolon: Seçim için checkbox -->
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let tasinmaz of tasinmazlar | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }">
-          <td>{{ tasinmaz.tasinmazId }}</td>
-          <td>{{ tasinmaz.ilAd }}</td>
-          <td>{{ tasinmaz.ilceAd }}</td>
-          <td>{{ tasinmaz.mahalleAd }}</td>
-          <td>{{ tasinmaz.ada }}</td>
-          <td>{{ tasinmaz.parsel }}</td>
-          <td>{{ tasinmaz.nitelik }}</td>
-          <td>{{ tasinmaz.koordinatBilgileri }}</td>
-          <td *ngIf="isAdmin()">{{ tasinmaz.kullaniciId }}</td>
-          <td>
-            <input type="checkbox" [checked]="isSelected(tasinmaz)" (change)="toggleSelection(tasinmaz)">
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="icon-row text-center mt-4">
-    <div class="row">
-      <div class="col-md">
-        <a href="/add-tasinmaz" class="text-dark">
-          <i class="bi bi-plus-square-fill fa-3x"></i> <!-- EKLE -->
-        </a>
-      </div>
-      <div class="col">
-        <a class="btn text-dark" (click)="navigateToUpdate()">
-          <i class="bi bi-arrow-repeat fa-3x"></i> <!-- GÜNCELLE -->
-        </a>
-      </div>
-      <div class="col">
-        <a class="btn text-dark" (click)="deleteSelected()">
-          <i class="bi bi-trash3-fill fa-3x"></i> <!-- SİL -->
-        </a>
-      </div>
-      <div class="col">
-    <a class="btn text-dark" (click)="exportToExcel()">
-      <i class="bi bi-file-earmark-excel fa-3x"></i> <!-- Dışa Aktar -->
-    </a>
-  </div>
+
+  <div class="container2"></div>
+
+  <div class="container mt-4">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+          <tr>
+            <th>ID</th>
+            <th>İL ADI</th>
+            <th>İLÇE ADI</th>
+            <th>MAHALLE ADI</th>
+            <th>ADA</th>
+            <th>PARSEL</th>
+            <th>NİTELİK</th>
+            <th>KOORDİNAT BİLGİLERİ</th>
+            <th *ngIf="isAdmin()">KULLANICI ID</th>
+            <th>Seç</th> <!-- Yeni kolon: Seçim için checkbox -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let tasinmaz of tasinmazlar | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }">
+            <td>{{ tasinmaz.tasinmazId }}</td>
+            <td>{{ tasinmaz.ilAd }}</td>
+            <td>{{ tasinmaz.ilceAd }}</td>
+            <td>{{ tasinmaz.mahalleAd }}</td>
+            <td>{{ tasinmaz.ada }}</td>
+            <td>{{ tasinmaz.parsel }}</td>
+            <td>{{ tasinmaz.nitelik }}</td>
+            <td>{{ tasinmaz.koordinatBilgileri }}</td>
+            <td *ngIf="isAdmin()">{{ tasinmaz.kullaniciId }}</td>
+            <td>
+              <input type="checkbox" [checked]="isSelected(tasinmaz)" (change)="toggleSelection(tasinmaz)">
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+
+    <div class="icon-row text-center mt-4">
+      <div class="row">
+        <div class="col-md">
+          <a href="/add-tasinmaz" class="text-dark">
+            <i class="bi bi-plus-square-fill fa-3x"></i> <!-- EKLE -->
+          </a>
+        </div>
+        <div class="col">
+          <a class="btn text-dark" (click)="navigateToUpdate()">
+            <i class="bi bi-arrow-repeat fa-3x"></i> <!-- GÜNCELLE -->
+          </a>
+        </div>
+        <div class="col">
+          <a class="btn text-dark" (click)="deleteSelected()">
+            <i class="bi bi-trash3-fill fa-3x"></i> <!-- SİL -->
+          </a>
+        </div>
+        <div class="col">
+          <a class="btn text-dark" (click)="exportToExcel()">
+            <i class="bi bi-file-earmark-excel fa-3x"></i> <!-- Dışa Aktar -->
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sayfalama -->
+    <pagination-controls (pageChange)="onPageChange($event)"></pagination-controls>
+
+    <div><app-map2></app-map2></div>
   </div>
-  <!-- Sayfalama -->
-  <pagination-controls (pageChange)="onPageChange($event)"></pagination-controls>
-
-
-  
-  <div><app-map2></app-map2></div>
 </div>
