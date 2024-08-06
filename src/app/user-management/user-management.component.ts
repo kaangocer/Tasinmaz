@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserManagementService } from '../user-management.service';
 import { UserDTO } from '../models/UserDTO'; // UserDTO'yu import edin
 import { ToastrService } from 'ngx-toastr';
@@ -26,14 +26,14 @@ export class UserManagementComponent implements OnInit {
   ) {
     // Kullanıcı ekleme formunu oluştur
     this.addUserForm = this.fb.group({
-      email: [''],
-      password: [''],
+      email: ['',[Validators.required]],
+      password: ['', Validators.required],
       role: ['']
     });
 
     // Kullanıcı güncelleme formunu oluştur
     this.updateUserForm = this.fb.group({
-      email: [''],
+      email: ['',[Validators.required]],
       password: [''],
       role: ['']
     });
@@ -57,15 +57,21 @@ export class UserManagementComponent implements OnInit {
   }
 
   addUser(): void {
+    // Formun doğrulama durumunu kontrol et
+    if (this.addUserForm.invalid) {
+      this.toastr.error('E-mail ve şifre alanları boş olamaz.');
+      return;
+    }
+  
     const newUser = this.addUserForm.value as UserDTO;
     if (!newUser.role) {
       newUser.role = 'User';
     }
-
+  
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: { message: 'Yeni kullanıcı eklensin mi?' }
     });
-
+  
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.userManagementService.addUser(newUser).subscribe(
@@ -85,27 +91,29 @@ export class UserManagementComponent implements OnInit {
       }
     });
   }
+  
 
   editUser(user: UserDTO): void {
     this.selectedUser = { ...user };
     this.updateUserForm.patchValue(user); // Güncelleme formunu doldur
   }
-
+  
   updateUser(): void {
-    if (!this.selectedUser) {
-      this.toastr.error('Formu doğru doldurunuz.');
+    // Formun doğrulama durumunu kontrol et
+    if (this.updateUserForm.invalid || !this.selectedUser) {
+      this.toastr.error('Lütfen tüm alanları doğru doldurduğunuzdan emin olun.');
       return;
     }
-
+  
     const updatedUser = { ...this.selectedUser, ...this.updateUserForm.value } as UserDTO;
     if (!updatedUser.role) {
       updatedUser.role = 'User';
     }
-
+  
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: { message: 'Kullanıcı bilgilerini değiştirmek istediğinize emin misiniz?' }
     });
-
+  
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.userManagementService.updateUser(updatedUser).subscribe(
@@ -128,6 +136,7 @@ export class UserManagementComponent implements OnInit {
       }
     });
   }
+  
 
   deleteUser(id: number): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {

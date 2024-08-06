@@ -31,7 +31,7 @@ import { UserManagementComponent } from './user-management/user-management.compo
 import { LogReportingComponent } from './log-reporting/log-reporting.component';
 import { Map2Component } from './map2/map2.component';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
-
+import { MatIconModule } from '@angular/material/icon';
 
 
 
@@ -72,7 +72,11 @@ import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-
     HttpClientModule,
     FormsModule,
     BrowserAnimationsModule, // Toastr için gerekli
-    ToastrModule.forRoot(), // Toastr modülünü ekleyin
+    ToastrModule.forRoot({
+      positionClass: 'toast-top-left', // Konum
+      timeOut: 3000, // Bildirimin gösterim süresi
+      progressBar: true, // İlerleme çubuğu
+      preventDuplicates: true}), 
     NgxPaginationModule,
      MatButtonModule,
     MatCardModule,
@@ -82,6 +86,7 @@ import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-
     HttpModule,
     ReactiveFormsModule,
     MatDialogModule,
+    MatIconModule,
   ],
   providers: [IlService,
     IlceService,

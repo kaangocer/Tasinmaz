@@ -159,26 +159,37 @@ export class Map2Component implements OnInit {
     const transformedCoordinates = fromLonLat([coordinates[0], coordinates[1]]);
     view.setCenter(transformedCoordinates);
     view.setZoom(zoom);
-
-    this.addMarker([coordinates[1], coordinates[0]]);
+  
+    // Sadece merkez ve zoom'u ayarlamak için addMarker çağırmadan
+    // Koordinatlar mevcut marker'lardan biri değilse yeni bir marker ekleyin
+    const features = this.vectorLayer.getSource().getFeatures();
+    const existingFeature = features.find(feature => {
+      const coord = (feature.getGeometry() as Point).getCoordinates();
+      const lonLat = toLonLat(coord);
+      return lonLat[0] === coordinates[1] && lonLat[1] === coordinates[0];
+    });
+  
+    if (!existingFeature) {
+      this.addMarker([coordinates[1], coordinates[0]]);
+    }
   }
+  
 
   addMarker(coordinates: [number, number]): void {
-    this.vectorLayer.getSource().clear();
-
     const transformedCoordinates = fromLonLat([coordinates[1], coordinates[0]]);
-
+  
     const marker = new Feature({
       geometry: new Point(transformedCoordinates)
     });
-
+  
     marker.setStyle(new Style({
       image: new Icon({
         anchor: [0.5, 1],
         src: 'https://openlayers.org/en/latest/examples/data/icon.png'
       })
     }));
-
+  
     this.vectorLayer.getSource().addFeature(marker);
   }
+  
 }
