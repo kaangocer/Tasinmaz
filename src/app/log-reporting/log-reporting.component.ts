@@ -72,6 +72,7 @@ export class LogReportingComponent implements OnInit {
       case 1: return 'Yeni Kayıt';
       case 2: return 'Güncelleme';
       case 3: return 'Silme';
+      case 4: return 'Giriş';
       default: return 'Bilinmeyen';
     }
   }

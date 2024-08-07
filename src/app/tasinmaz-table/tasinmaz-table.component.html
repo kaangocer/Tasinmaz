@@ -1,99 +1,139 @@
+
 <app-nav></app-nav>
 
 <div class="container mt-4">
-  <form [formGroup]="filterForm" (ngSubmit)="applyFilters()">
-    <div class="row mb-3">
-      <div class="col-md-2">
-        <input type="text" class="form-control" placeholder="İl Adı" formControlName="ilAd">
-      </div>
-      <div class="col-md-2">
-        <input type="text" class="form-control" placeholder="İlçe Adı" formControlName="ilceAd">
-      </div>
-      <div class="col-md-2">
-        <input type="text" class="form-control" placeholder="Mahalle Adı" formControlName="mahalleAd">
-      </div>
-      <div class="col-md-2">
-        <input type="text" class="form-control" placeholder="Ada" formControlName="ada">
-      </div>
-      <div class="col-md-2">
-        <input type="text" class="form-control" placeholder="Parsel" formControlName="parsel">
-      </div>
-      <div class="col-md-2">
-        <input type="text" class="form-control" placeholder="Nitelik" formControlName="nitelik">
-      </div>
-      <div class="col-md-2" *ngIf="isAdmin()">
-        <input type="text" class="form-control" placeholder="Kullanıcı ID" formControlName="kullaniciId">
+  <div class="row">
+    <div class="col-md-12">
+      <form [formGroup]="filterForm" (ngSubmit)="applyFilters()">
+        <div class="row mb-3">
+          <div class="col-md-2">
+            <input type="text" class="form-control" placeholder="İl Adı" formControlName="ilAd">
+          </div>
+          <div class="col-md-2">
+            <input type="text" class="form-control" placeholder="İlçe Adı" formControlName="ilceAd">
+          </div>
+          <div class="col-md-2">
+            <input type="text" class="form-control" placeholder="Mahalle Adı" formControlName="mahalleAd">
+          </div>
+          <div class="col-md-2">
+            <input type="text" class="form-control" placeholder="Ada" formControlName="ada">
+          </div>
+          <div class="col-md-2">
+            <input type="text" class="form-control" placeholder="Parsel" formControlName="parsel">
+          </div>
+          <div class="col-md-2">
+            <input type="text" class="form-control" placeholder="Nitelik" formControlName="nitelik">
+          </div>
+          <div class="col-md-2" *ngIf="isAdmin()">
+            <input type="text" class="form-control" placeholder="Kullanıcı ID" formControlName="kullaniciId">
+          </div>
+        </div>
+        <button type="submit" class="btn filtrele-btn">Filtrele</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-12 table-container">
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+          <thead class="thead-dark">
+            <tr>
+              <th>ID</th>
+              <th>İL ADI</th>
+              <th>İLÇE ADI</th>
+              <th>MAHALLE ADI</th>
+              <th>ADA</th>
+              <th>PARSEL</th>
+              <th>NİTELİK</th>
+              <th>KOORDİNAT BİLGİLERİ</th>
+              <th *ngIf="isAdmin()">KULLANICI ID</th>
+              <th>Seç</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let tasinmaz of tasinmazlar | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }">
+              <td>{{ tasinmaz.tasinmazId }}</td>
+              <td>{{ tasinmaz.ilAd }}</td>
+              <td>{{ tasinmaz.ilceAd }}</td>
+              <td>{{ tasinmaz.mahalleAd }}</td>
+              <td>{{ tasinmaz.ada }}</td>
+              <td>{{ tasinmaz.parsel }}</td>
+              <td>{{ tasinmaz.nitelik }}</td>
+              <td>{{ tasinmaz.koordinatBilgileri }}</td>
+              <td *ngIf="isAdmin()">{{ tasinmaz.kullaniciId }}</td>
+              <td>
+                <input type="checkbox" [checked]="isSelected(tasinmaz)" (change)="toggleSelection(tasinmaz)">
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-    <button type="submit" class="btn btn-primary">Filtrele</button>
-  </form>
-
-  <div class="container2"></div>
+  </div>
 
   <div class="container mt-4">
-    <div class="table-responsive">
-      <table class="table table-bordered table-hover">
-        <thead class="thead-dark">
-          <tr>
-            <th>ID</th>
-            <th>İL ADI</th>
-            <th>İLÇE ADI</th>
-            <th>MAHALLE ADI</th>
-            <th>ADA</th>
-            <th>PARSEL</th>
-            <th>NİTELİK</th>
-            <th>KOORDİNAT BİLGİLERİ</th>
-            <th *ngIf="isAdmin()">KULLANICI ID</th>
-            <th>Seç</th> <!-- Yeni kolon: Seçim için checkbox -->
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let tasinmaz of tasinmazlar | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }">
-            <td>{{ tasinmaz.tasinmazId }}</td>
-            <td>{{ tasinmaz.ilAd }}</td>
-            <td>{{ tasinmaz.ilceAd }}</td>
-            <td>{{ tasinmaz.mahalleAd }}</td>
-            <td>{{ tasinmaz.ada }}</td>
-            <td>{{ tasinmaz.parsel }}</td>
-            <td>{{ tasinmaz.nitelik }}</td>
-            <td>{{ tasinmaz.koordinatBilgileri }}</td>
-            <td *ngIf="isAdmin()">{{ tasinmaz.kullaniciId }}</td>
-            <td>
-              <input type="checkbox" [checked]="isSelected(tasinmaz)" (change)="toggleSelection(tasinmaz)">
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="icon-row text-center mt-4">
-      <div class="row">
-        <div class="col-md">
-          <a href="/add-tasinmaz" class="text-dark">
-            <i class="bi bi-plus-square-fill fa-3x"></i> <!-- EKLE -->
-          </a>
+    <div class="row icon-row">
+      <div class="col-md-3 text-center">
+        <div class="icon-wrapper">
+          <div class="icon-container">
+            <a href="/add-tasinmaz" class="text-dark">
+              <i class="bi bi-plus-square-fill fa-3x icon-add"></i>
+            </a>
+          </div>
+          <p class="icon-label">Ekle</p>
         </div>
-        <div class="col">
-          <a class="btn text-dark" (click)="navigateToUpdate()">
-            <i class="bi bi-arrow-repeat fa-3x"></i> <!-- GÜNCELLE -->
-          </a>
+      </div>
+      <div class="col-md-3 text-center">
+        <div class="icon-wrapper">
+          <div class="icon-container">
+            <a class="btn text-dark" (click)="navigateToUpdate()">
+              <i class="bi bi-arrow-repeat fa-3x icon-update"></i>
+            </a>
+          </div>
+          <p class="icon-label">Güncelle</p>
         </div>
-        <div class="col">
-          <a class="btn text-dark" (click)="deleteSelected()">
-            <i class="bi bi-trash3-fill fa-3x"></i> <!-- SİL -->
-          </a>
+      </div>
+      <div class="col-md-3 text-center">
+        <div class="icon-wrapper">
+          <div class="icon-container">
+            <a class="btn text-dark" (click)="deleteSelected()">
+              <i class="bi bi-trash3-fill icon-delete fa-3x"></i>
+            </a>
+          </div>
+          <p class="icon-label">Sil</p>
         </div>
-        <div class="col">
-          <a class="btn text-dark" (click)="exportToExcel()">
-            <i class="bi bi-file-earmark-excel fa-3x"></i> <!-- Dışa Aktar -->
-          </a>
+      </div>
+      <div class="col-md-3 text-center">
+        <div class="icon-wrapper">
+          <div class="icon-container">
+            <a class="btn text-dark" (click)="exportToExcel()">
+              <i class="bi bi-file-earmark-excel icon-export fa-3x"></i>
+            </a>
+          </div>
+          <p class="icon-label">Dışa Aktar</p>
         </div>
       </div>
     </div>
+  </div>
+  
+  
 
-    <!-- Sayfalama -->
-    <pagination-controls (pageChange)="onPageChange($event)"></pagination-controls>
+  
+  
+  
+  
+  
 
-    <div><app-map2></app-map2></div>
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <pagination-controls (pageChange)="onPageChange($event)"></pagination-controls>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-12 map-container">
+      <app-map2></app-map2>
+    </div>
   </div>
 </div>

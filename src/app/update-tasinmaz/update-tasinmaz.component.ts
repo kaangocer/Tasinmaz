@@ -16,7 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./update-tasinmaz.component.css']
 })
 export class UpdateTasinmazComponent implements OnInit {
-  @ViewChild(MapComponent) mapComponent: MapComponent; // Harita bileşeni referansı
+  @ViewChild(MapComponent) mapComponent: MapComponent; 
 
   tasinmaz: any = {};
   iller: any[] = [];

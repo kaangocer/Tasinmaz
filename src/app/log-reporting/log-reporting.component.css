@@ -54,4 +54,14 @@
   .table-striped tbody tr:nth-of-type(odd) {
     background-color: #f2f2f2;
   }
+  .filtre-btn {
+    background-color: #00346b; /* Mavi arka plan */
+    color: white; /* Beyaz yazı rengi */
+    border: 1px solid #d1d1d1; /* Hafif gri kenarlık */
+  }
+  
+  .filtre-btn:hover {
+    background-color: #004085; /* Daha da koyu mavi arka plan */
+    transform: translateY(-2px); /* Buton geri çekilir */
+  }
   

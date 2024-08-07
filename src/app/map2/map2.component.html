@@ -3,5 +3,6 @@
 
 <button type="button" (click)="toggleLayer('osm', $event)">Toggle OSM Layer</button>
   <button type="button" (click)="toggleLayer('googleMaps', $event)">Toggle Google Maps Layer</button>
-<input type="range" min="0" max="1" step="0.1" (input)="setLayerOpacity('osm', $event.target.value)" value="1"> OSM Opacity
-<input type="range" min="0" max="1" step="0.1" (input)="setLayerOpacity('googleMaps', $event.target.value)" value="1"> Google Maps Opacity
+  <input type="range" min="0" max="1" step="0.1" (input)="setLayerOpacity('osm', $event.target.value)" value="1" class="opacity-slider"> OSM Opacity
+  <input type="range" min="0" max="1" step="0.1" (input)="setLayerOpacity('googleMaps', $event.target.value)" value="1" class="opacity-slider"> Google Maps Opacity
+  

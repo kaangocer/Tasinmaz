@@ -4,4 +4,22 @@
     height: 500px; /* Yükseklik vermeyi unutmayın */
     position: relative; /* Konumlandırmayı kontrol edin */
   }
+
+  
+  
+ 
+  
+  .opacity-slider::-webkit-slider-runnable-track {
+    border-radius: 10px; /* Köşe yuvarlama */
+    background: #000000; /* Track arka plan rengi (gri) */
+   
+   
+  }
+  
+  
+  
+ 
+  
+  
+ 
   
