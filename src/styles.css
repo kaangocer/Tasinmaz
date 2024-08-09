@@ -20,7 +20,7 @@ body {
   background: -o-linear-gradient(270deg, #fff, #f8b500); /* Opera11.10+ */
   background: -ms-linear-gradient(270deg, #fff, #f8b500); /* IE10+ */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff', endColorstr='#f8b500', GradientType=0); /* IE6-9 */
-  background: linear-gradient(270deg, #00c6ff 0%, #0267e4 100%);
+  background: linear-gradient(270deg, #018a94 0%, #a0a0a0 100%);
 
 
 

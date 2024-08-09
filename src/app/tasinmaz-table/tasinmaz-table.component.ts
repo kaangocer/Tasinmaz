@@ -207,7 +207,7 @@ export class TasinmazTableComponent implements OnInit {
       this.tasinmazService.getAllProperties(filters).subscribe(tasinmazData => {
         this.tasinmazlar = tasinmazData;
         this.getIller();
-        
+        this.selectedTasinmazlar = [];
         if (this.mapComponent) {
           this.mapComponent.tasinmazlar = tasinmazData;
           this.mapComponent.addMarkers();
@@ -219,6 +219,7 @@ export class TasinmazTableComponent implements OnInit {
       const id = this.authService.getCurrentUserId();
       this.tasinmazService.getTasinmazByKullaniciId(id, filters).subscribe(tasinmazData => {
         this.tasinmazlar = tasinmazData;
+        this.selectedTasinmazlar = [];
         this.getIller();
       }, error => {
         this.toastr.error('Taşınmazlar getirilirken bir hata oluştu.', 'Hata');

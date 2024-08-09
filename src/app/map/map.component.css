@@ -3,3 +3,9 @@
   height: 100vh; /* Haritanın yüksekliği */
   position: relative;
 }
+.opacity-sliders::-webkit-slider-runnable-track {
+  border-radius: 10px; /* Köşe yuvarlama */
+  background: #000000; /* Track arka plan rengi (gri) */
+ 
+ 
+}

@@ -11,6 +11,7 @@ export class TasinmazService {
 
   private apiUrl = 'https://localhost:44301/api/Tasinmaz'; // API'nin base URL'si
   
+  
   TOKEN_KEY="token";
   constructor(private http: HttpClient,private authService: AuthService) { }
 
@@ -84,5 +85,9 @@ private createHttpParams(filters: any): HttpParams {
     }
   }
   return params;
+}
+
+getUserEmailByKullaniciId(kullaniciId: number): Observable<{ email: string }> {
+  return this.http.get<{ email: string }>(`${this.apiUrl}/email/${kullaniciId}`);
 }
 }
