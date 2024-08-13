@@ -1,0 +1,1 @@
+; 2tsXæhr2src/app/tasinmaz-table/tasinmaz-table.component.ts

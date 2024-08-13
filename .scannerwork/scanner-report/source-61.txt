@@ -1,0 +1,77 @@
+<app-nav></app-nav>
+
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">Taşınmaz Güncelle</h2>
+
+  <form (ngSubmit)="onSubmit()" #tasinmazForm="ngForm" class="shadow-sm p-4 bg-light rounded border">
+    
+
+    <!-- Kullanıcı ID (Yönetici için gizli alan) -->
+    <div *ngIf="isAdmin" class="mb-3">
+      <label for="kullaniciId" class="form-label">Kullanıcı ID</label>
+      <input type="number" class="form-control" id="kullaniciId" readonly required [(ngModel)]="tasinmaz.kullaniciId" name="kullaniciId">
+    </div>
+
+    <!-- İl seçimi -->
+    <div class="mb-3">
+      <label for="ilId" class="form-label">İl</label>
+      <select class="form-select" id="ilId" required [(ngModel)]="selectedIlId" name="ilId" (change)="onIlChange()">
+        <option value="" disabled selected>Seçiniz</option>
+        <option *ngFor="let il of iller" [value]="il.ilId">{{ il.ilAdi }}</option>
+      </select>
+    </div>
+
+    <!-- İlçe seçimi -->
+    <div class="mb-3">
+      <label for="ilceId" class="form-label">İlçe</label>
+      <select class="form-select" id="ilceId" required [(ngModel)]="selectedIlceId" name="ilceId" (change)="onIlceChange()">
+        <option value="" disabled selected>Seçiniz</option>
+        <option *ngFor="let ilce of ilceler" [value]="ilce.ilceId">{{ ilce.ilceAdi }}</option>
+      </select>
+    </div>
+
+    <!-- Mahalle seçimi -->
+    <div class="mb-3">
+      <label for="mahalleId" class="form-label">Mahalle</label>
+      <select class="form-select" id="mahalleId" required [(ngModel)]="tasinmaz.mahalleId" name="mahalleId">
+        <option value="" disabled selected>Seçiniz</option>
+        <option *ngFor="let mahalle of mahalleler" [value]="mahalle.mahalleId">{{ mahalle.mahalleAdi }}</option>
+      </select>
+    </div>
+
+    <!-- Ada -->
+    <div class="mb-3">
+      <label for="ada" class="form-label">ADA</label>
+      <input type="text" class="form-control" id="ada" [(ngModel)]="tasinmaz.ada" name="ada">
+    </div>
+
+    <!-- Parsel -->
+    <div class="mb-3">
+      <label for="parsel" class="form-label">PARSEL</label>
+      <input type="text" class="form-control" id="parsel" [(ngModel)]="tasinmaz.parsel" name="parsel">
+    </div>
+
+    <!-- Nitelik -->
+    <div class="mb-3">
+      <label for="nitelik" class="form-label">NİTELİK</label>
+      <input type="text" class="form-control" id="nitelik" [(ngModel)]="tasinmaz.nitelik" name="nitelik">
+    </div>
+
+    <!-- Koordinat Bilgileri -->
+    <div class="mb-4">
+      <label for="koordinatBilgileri" class="form-label">KOORDİNAT BİLGİLERİ</label>
+      <input type="text" class="form-control" id="koordinatBilgileri" [(ngModel)]="tasinmaz.koordinatBilgileri" name="koordinatBilgileri" readonly>
+    </div>
+<!-- Harita bileşeni -->
+<div class="mb-4">
+  <app-map></app-map>
+</div>
+    <!-- Submit Butonu -->
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-primary">
+        <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        <span *ngIf="!isSubmitting">Güncelle</span>
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,67 @@
+/* Genel form düzenlemeleri */
+.custom-label {
+    font-weight: 600;
+    color: #2c2c2c;
+    margin-bottom: 0.5rem;
+  }
+  
+  .custom-input {
+    
+    border: 1px solid #ced4da;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .custom-select {
+    border-radius: 0.25rem;
+    border: 1px solid #ced4da;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Buton düzenlemeleri */
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+  }
+  
+  .btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+  }
+  
+  /* Tablo düzenlemeleri */
+  .table {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  
+  .table th, .table td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #001a8f;
+    border-right : 1px solid #001a8f;
+  }
+  
+  .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f2f2f2;
+  }
+  .filtre-btn {
+    background-color: #00346b; /* Mavi arka plan */
+    color: white; /* Beyaz yazı rengi */
+    border: 1px solid #d1d1d1; /* Hafif gri kenarlık */
+  }
+  
+  .filtre-btn:hover {
+    background-color: #004085; /* Daha da koyu mavi arka plan */
+    transform: translateY(-2px); /* Buton geri çekilir */
+  }
+  

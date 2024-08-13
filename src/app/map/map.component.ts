@@ -177,7 +177,11 @@ export class MapComponent implements OnInit, AfterViewInit {
         const transformedCoordinates = fromLonLat(coordinates);
         view.setCenter(transformedCoordinates);
         view.setZoom(zoom);
-        this.addMarker([coordinates[1], coordinates[0]]);
+  
+        // Marker'ı merkezlendikten ve zoom yapıldıktan sonra ekleyin
+        setTimeout(() => {
+          this.addMarker([coordinates[1], coordinates[0]]);
+        }, 1000);
       } else {
         console.error('Harita görünümü başlatılmamış.');
       }

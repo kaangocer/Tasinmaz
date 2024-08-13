@@ -1,12 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IlService } from '../../services/ilServices/il.service';
 import { IlceService } from '../../services/ilceServices/ilce.service';
 import { MahalleService } from '../../services/mahalleServices/mahalle.service';
 import { TasinmazService } from '../../services/tasinmazServices/tasinmaz.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../auth.service';
-import { MapComponent } from '../map/map.component'; 
+import { MapComponent } from '../map/map.component';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -16,15 +17,16 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./update-tasinmaz.component.css']
 })
 export class UpdateTasinmazComponent implements OnInit {
-  @ViewChild(MapComponent) mapComponent: MapComponent; 
+  @ViewChild(MapComponent) mapComponent: MapComponent;
 
-  tasinmaz: any = {};
+  updateForm: FormGroup;
   iller: any[] = [];
   ilceler: any[] = [];
   mahalleler: any[] = [];
-  selectedIlId: number;
-  selectedIlceId: number;
   isAdmin: boolean = false;
+  isSubmitting: boolean = false;
+  tasinmazId: number;
+  kullaniciId: number;
 
   constructor(
     private ilService: IlService,
@@ -35,19 +37,38 @@ export class UpdateTasinmazComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private authService: AuthService,
+    private fb: FormBuilder,
     public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
+    this.tasinmazId = +this.route.snapshot.paramMap.get('id'); // ID'yi route'dan al
+    this.kullaniciId = this.authService.getCurrentUserId(); // O anki kullanıcı ID'sini al
+    this.initializeForm();
     this.getIller();
     this.loadTasinmaz();
     
     // Koordinat seçme işlevini ayarla
     if (this.mapComponent) {
       this.mapComponent.onCoordinatesSelected = (coordinates: [number, number]) => {
-        this.tasinmaz.koordinatBilgileri = coordinates.join(',');
+        this.updateForm.patchValue({
+          koordinatBilgileri: coordinates.join(',')
+        });
       };
     }
+  }
+
+  initializeForm() {
+    this.updateForm = this.fb.group({
+      ada: ['', Validators.required],
+      parsel: ['', Validators.required],
+      nitelik: ['', Validators.required],
+      koordinatBilgileri: [''],
+      ilId: [null, Validators.required],
+      ilceId: [null, Validators.required],
+      mahalleId: [null, Validators.required],
+      kullaniciId: [{ value: this.kullaniciId, disabled: true }] // Kullanıcı ID'sini formda ayarla
+    });
   }
 
   getIller() {
@@ -57,32 +78,28 @@ export class UpdateTasinmazComponent implements OnInit {
   }
 
   loadTasinmaz() {
-    const id = +this.route.snapshot.paramMap.get('id');
-    this.tasinmazService.getTasinmaz(id).subscribe(data => {
-      this.tasinmaz = data;
-  
-      if (this.tasinmaz && this.tasinmaz.mahalle) {
-        const mahalle = this.tasinmaz.mahalle;
-        this.selectedIlceId = mahalle.ilceId;
-        if (mahalle.ilce && mahalle.ilce.il) {
-          this.selectedIlId = mahalle.ilce.il.ilId;
-        } else {
-          console.error('İlçe veya İl bilgisi mevcut değil:', mahalle.ilce);
-          this.toastr.error('İlçe veya İl bilgisi bulunamadı.', 'Hata');
-        }
-  
+    this.tasinmazService.getTasinmaz(this.tasinmazId).subscribe(data => {
+      this.updateForm.patchValue(data);
+
+      if (data && data.mahalle) {
+        const mahalle = data.mahalle;
+        this.updateForm.patchValue({
+          ilceId: mahalle.ilceId,
+          mahalleId: mahalle.mahalleId,
+          ilId: mahalle.ilce.ilId
+        });
+
         // İl ve ilçe bilgilerini al
-        this.getIlceByIlId(this.selectedIlId);
-        this.getMahallelerByIlceId(this.selectedIlceId);
-  
+        this.getIlceByIlId(mahalle.ilce.ilId);
+        this.getMahallelerByIlceId(mahalle.ilce.ilceId);
+
         // Koordinat bilgileri mevcutsa haritayı güncelle
-        if (this.tasinmaz.koordinatBilgileri) {
-          const coordinates = this.tasinmaz.koordinatBilgileri.split(',').map(Number);
+        if (data.koordinatBilgileri) {
+          const coordinates = data.koordinatBilgileri.split(',').map(Number);
           this.mapComponent.setCenterAndZoom([coordinates[1], coordinates[0]], 10); // [longitude, latitude] formatında
         }
-  
       } else {
-        console.error('Mahalle bilgisi mevcut değil:', this.tasinmaz);
+        console.error('Mahalle bilgisi mevcut değil:', data);
         this.toastr.error('Mahalle bilgisi bulunamadı.', 'Hata');
       }
     }, error => {
@@ -90,20 +107,22 @@ export class UpdateTasinmazComponent implements OnInit {
       this.toastr.error('Taşınmaz yüklenirken bir hata oluştu.', 'Hata');
     });
   }
-  
 
   onIlChange() {
-    this.selectedIlceId = null;
+    this.updateForm.patchValue({
+      ilceId: null,
+      mahalleId: null
+    });
     this.resetIlceAndMahalle();
-    if (this.selectedIlId) {
-      this.getIlceByIlId(this.selectedIlId);
+    if (this.updateForm.get('ilId').value) {
+      this.getIlceByIlId(this.updateForm.get('ilId').value);
     }
   }
 
   onIlceChange() {
     this.resetMahalle();
-    if (this.selectedIlceId) {
-      this.getMahallelerByIlceId(this.selectedIlceId);
+    if (this.updateForm.get('ilceId').value) {
+      this.getMahallelerByIlceId(this.updateForm.get('ilceId').value);
     }
   }
 
@@ -114,7 +133,9 @@ export class UpdateTasinmazComponent implements OnInit {
 
   resetMahalle() {
     this.mahalleler = [];
-    this.tasinmaz.mahalleId = null;
+    this.updateForm.patchValue({
+      mahalleId: null
+    });
   }
 
   getIlceByIlId(ilId: number) {
@@ -130,22 +151,24 @@ export class UpdateTasinmazComponent implements OnInit {
   }
 
   onSubmit() {
-    if (!this.selectedIlId || !this.selectedIlceId || !this.tasinmaz.mahalleId) {
+    if (this.updateForm.invalid) {
       this.toastr.error('Lütfen tüm alanları doldurun ve seçim yapın.', 'Hata');
       return;
     }
-  
+
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '300px',
       data: { message: 'Güncellemek istediğinize emin misiniz?' }
     });
-  
+
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.tasinmaz.ilId = this.selectedIlId;
-        this.tasinmaz.ilceId = this.selectedIlceId;
-  
-        this.tasinmazService.updateTasinmaz(this.tasinmaz).subscribe(
+        this.isSubmitting = true;
+        this.tasinmazService.updateTasinmaz({
+          ...this.updateForm.value,
+          tasinmazId: this.tasinmazId,
+          kullaniciId: this.kullaniciId // Kullanıcı ID'sini gönder
+        }).subscribe(
           () => {
             this.toastr.success('Taşınmaz başarıyla güncellendi!', 'Başarılı');
             this.router.navigate(['/tasinmaz-list']);
@@ -154,7 +177,7 @@ export class UpdateTasinmazComponent implements OnInit {
             console.error('Taşınmaz güncellenirken hata oluştu:', error);
             this.toastr.error('Taşınmaz güncellenirken bir hata oluştu.', 'Hata');
           }
-        );
+        ).add(() => this.isSubmitting = false);
       }
     });
   }

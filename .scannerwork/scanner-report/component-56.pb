@@ -1,0 +1,1 @@
+8 2cssXƒhr3src/app/tasinmaz-table/tasinmaz-table.component.css

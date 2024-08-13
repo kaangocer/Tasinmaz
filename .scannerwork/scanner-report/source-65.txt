@@ -1,0 +1,73 @@
+<app-nav></app-nav>
+
+<div class="container mt-4">
+  <!-- Kullanıcı Listeleme -->
+  <div class="custom-table-container">
+    <h2>Kullanıcı İşlemleri</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Email</th>
+          <th>Rol</th>
+          <th>İşlemler</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users | paginate: { itemsPerPage: 10, currentPage: p }">
+          <td>{{ user.kullaniciId }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.role }}</td>
+          <td>
+            <button class="btn btn-warning btn-sm" (click)="editUser(user)">Düzenle</button>
+            <button class="btn btn-danger btn-sm" (click)="deleteUser(user.kullaniciId)">Sil</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+  </div>
+
+  <div class="form-container">
+    <!-- Kullanıcı Ekleme Formu -->
+    <div class="custom-form-container">
+      <h2>Kullanıcı Ekle</h2>
+      <form [formGroup]="addUserForm" (ngSubmit)="addUser()">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" formControlName="email" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="password">Şifre</label>
+          <input type="password" id="password" formControlName="password" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="role">Rol</label>
+          <input type="text" id="role" formControlName="role" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Ekle</button>
+      </form>
+    </div>
+
+    <!-- Kullanıcı Güncelleme Formu -->
+    <div *ngIf="selectedUser" class="custom-update-container">
+      <h2>Kullanıcı Güncelle</h2>
+      <form [formGroup]="updateUserForm" (ngSubmit)="updateUser()">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" formControlName="email" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="password">Şifre (Yeni şifre bırakılırsa mevcut şifre korunur)</label>
+          <input type="password" id="password" formControlName="password" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="role">Rol</label>
+          <input type="text" id="role" formControlName="role" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Güncelle</button>
+        <button type="button" class="btn btn-secondary" (click)="selectedUser = null">İptal</button>
+      </form>
+    </div>
+  </div>
+</div>

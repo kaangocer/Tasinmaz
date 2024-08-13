@@ -1,0 +1,131 @@
+/* Genel Stil Ayarları */
+.container {
+  max-width: 1200px;
+  margin: 0 auto; /* Sayfayı ortalar */
+}
+
+.table-container {
+  margin-top: 3px;
+}
+
+.table th, .table td {
+  text-align: center;
+  vertical-align: middle;
+  border: 2px solid rgb(67, 6, 180);
+  max-width: 200px; /* Hücre genişliğini ayarlayın */
+  overflow: hidden; /* Taşma durumunda metni gizler */
+  text-overflow: ellipsis; /* Taşan metni üç nokta ile gösterir */
+  white-space: nowrap; /* Metni tek satıra sıkıştırır */
+}
+
+.table tbody tr:hover {
+  background-color: #ffffff;
+}
+
+.icon-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 150px; /* Sabit bir yükseklik ayarlayın */
+}
+
+.icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80px; /* İkonların boyutunu sabitlemek için */
+  width: 80px; /* İkonların genişliğini sabitlemek için */
+}
+
+.icon-wrapper i {
+  display: block;
+  font-size: 3rem; /* İkon boyutu */
+  margin-bottom: 10px; /* İkon ile etiket arasındaki boşluk */
+}
+
+.icon-label {
+  font-size: 1rem; /* Etiket yazı boyutu */
+  color: #333; /* Etiket yazı rengi */
+  font-weight: bold; /* Etiket yazı kalınlığı */
+  margin: 0;
+}
+
+/* İkonların hizalanması için ek ayar */
+.col-md-2 {
+  display: flex;
+  align-items: flex-start; /* Eşit yükseklik sağlamak için hizalar */
+}
+
+/* Ekleme ikonu */
+.icon-add {
+  color: #154415; /* Yeşil */
+}   
+
+/* Güncelleme ikonu */
+.icon-update {
+  color: #0000be; /* Mavi */
+}
+
+/* Silme ikonu */
+.icon-delete {
+  color: #dc3545; /* Kırmızı */
+}
+
+/* Dışa Aktarma ikonu */
+.icon-export {
+  color: #ffc107; /* Sarı */
+}
+
+.filtrele-btn {
+  background-color: #00346b; /* Mavi arka plan */
+  color: white; /* Beyaz yazı rengi */
+  border: 1px solid #d1d1d1; /* Hafif gri kenarlık */
+}
+
+.filtrele-btn:hover {
+  background-color: #004085; /* Daha da koyu mavi arka plan */
+  transform: translateY(-2px); /* Buton geri çekilir */
+}
+
+/* ID ve Kullanıcı ID sütunlarını gizle */
+.table th:nth-child(1),
+.table td:nth-child(1) {
+  display: none;
+}
+
+/* Diğer gerekli stiller */
+.form-control {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  margin-bottom: 7px;
+}
+
+.form-control:focus {
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.icon-add:hover {
+  color: #218838; /* Koyu yeşil */
+}
+.icon-update:hover {
+  color: #0056b3;
+}
+.icon-delete:hover {
+  color: #c82333; /* Koyu kırmızı */
+}
+
+.icon-export:hover {
+  color: #e0a800; /* Koyu sarı */
+}

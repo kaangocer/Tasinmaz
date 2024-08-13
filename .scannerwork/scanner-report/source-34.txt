@@ -1,0 +1,40 @@
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<div class="login-container" fxLayout="column" fxLayoutAlign="center center">
+  <mat-card class="login-card">
+    <mat-card-header>
+      <div class="header-container">
+        <mat-card-title class="app-title">Taşınmaz Yönetimi</mat-card-title>
+        <mat-card-subtitle class="app-subtitle">Kullanıcı Girişi</mat-card-subtitle>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <mat-icon matPrefix>email</mat-icon>
+          <input matInput type="email" formControlName="email" required />
+          <mat-error *ngIf="loginForm.get('email').hasError('required')">
+            Email gereklidir.
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('email').hasError('email')">
+            Geçerli bir email adresi girin.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Şifre</mat-label>
+          <mat-icon matPrefix>lock</mat-icon>
+          <input matInput type="password" formControlName="password" required />
+          <mat-error *ngIf="loginForm.get('password').hasError('required')">
+            Şifre gereklidir.
+          </mat-error>
+        </mat-form-field>
+        <div class="button-container">
+          <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">Giriş Yap</button>
+          <button mat-raised-button color="accent" type="button" (click)="openRegisterPopup()">Kayıt Ol</button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

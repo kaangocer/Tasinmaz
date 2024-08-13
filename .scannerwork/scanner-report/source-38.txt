@@ -1,0 +1,7 @@
+<!-- map.component.html -->
+<div id="map" class="map"></div>
+
+<button type="button" (click)="toggleLayer('osm', $event)">OSM Layer</button>
+  <button type="button" (click)="toggleLayer('googleMaps', $event)">GM Layer</button>
+<input type="range" min="0" max="1" step="0.1" (input)="setLayerOpacity('osm', $event.target.value)" value="1" class="opacity-sliders"> OSM Opacity
+<input type="range" min="0" max="1" step="0.1" (input)="setLayerOpacity('googleMaps', $event.target.value)" value="1" class="opacity-sliders"> Google Maps Opacity

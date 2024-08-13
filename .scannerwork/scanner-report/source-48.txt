@@ -1,0 +1,49 @@
+.navbar {
+  background-color: #343a40; /* Daha koyu bir arka plan rengi */
+  border-bottom: 2px solid #ffc107; /* Altına altın rengi bir şerit ekler */
+}
+
+.navbar-toggler {
+  border: none; /* Toggler butonun kenarını kaldırır */
+}
+
+.navbar-toggler-icon {
+  background-color: #fff; /* Toggler ikonunun rengini beyaz yapar */
+}
+
+.navbar-nav .nav-link {
+  color: #ffc107 !important; /* Linklerin rengini altın sarısı yapar */
+  font-weight: bold; /* Linklerin yazılarını kalın yapar */
+  margin-right: 7px;
+  padding: 10px 15px; /* Linklerin çevresine boşluk ekler */
+  transition: background-color 0.3s, color 0.3s; /* Hover efektinin geçiş süresini ayarlar */
+}
+
+.navbar-nav .nav-link:hover {
+  background-color: #ffc107; /* Hover sırasında arka planı altın sarısı yapar */
+  color: #343a40 !important; /* Hover sırasında yazı rengini koyu yapar */
+  border-radius: 4px; /* Hover sırasında köşeleri yuvarlar */
+}
+
+.navbar-nav .active-link {
+  background-color: #ffc107 !important; /* Aktif linkin arka planı altın sarısı */
+  color: #343a40 !important; /* Aktif linkin yazı rengi koyu */
+  border-radius: 4px; /* Aktif linkin köşelerini yuvarlar */
+  font-weight: bold; /* Aktif linkin yazısını kalın yapar */
+}
+
+.btn-danger {
+  background-color: #dc3545; /* Logout butonunun rengini kırmızı yapar */
+  border: none; /* Logout butonunun kenarını kaldırır */
+  border-radius: 4px; /* Logout butonunun köşelerini yuvarlar */
+  transition: background-color 0.3s, color 0.3s; /* Hover efektinin geçiş süresini ayarlar */
+}
+
+.btn-danger:hover {
+  background-color: #c82333; /* Hover sırasında logout butonunun rengini koyulaştırır */
+  color: #fff; /* Hover sırasında logout butonunun yazı rengini beyaz yapar */
+}
+
+.ml-auto {
+  margin-left: auto; /* Linklerin sağa yaslanmasını sağlar */
+}

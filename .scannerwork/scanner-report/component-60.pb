@@ -1,0 +1,1 @@
+< 2cssX,hr5src/app/update-tasinmaz/update-tasinmaz.component.css

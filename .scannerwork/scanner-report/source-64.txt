@@ -1,0 +1,49 @@
+/* Genel Form Stili */
+.form-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  .custom-form-container,
+  .custom-update-container {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 48%;
+  }
+  
+  .custom-form-container h2,
+  .custom-update-container h2 {
+    margin-bottom: 20px;
+  }
+  
+  .custom-form-container .form-group,
+  .custom-update-container .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .custom-form-container .form-control,
+  .custom-update-container .form-control {
+    border-radius: 4px;
+  }
+  
+  .custom-form-container .btn,
+  .custom-update-container .btn {
+    width: 100%;
+  }
+  
+  .custom-table-container {
+    margin-top: 20px;
+  }
+  
+  .custom-table-container .table th,
+  .custom-table-container .table td {
+    vertical-align: middle;
+  }
+  
+  .custom-table-container .btn-sm {
+    margin-right: 5px;
+  }
+  

@@ -1,0 +1,88 @@
+<app-nav></app-nav>
+
+<div class="container mt-4">
+  <h2 class="mb-4">Log Raporlama</h2>
+  <form [formGroup]="filterForm" (ngSubmit)="onFilter()">
+    <div class="row">
+      <!-- Kullanıcı ID -->
+      <div class="col-md-4 mb-3">
+        <label for="kullaniciId" class="form-label custom-label">Kullanıcı ID</label>
+        <input type="number" class="form-control custom-input" id="kullaniciId" formControlName="kullaniciId">
+      </div>
+
+      <!-- Durum -->
+      <div class="col-md-4 mb-3">
+        <label for="durumId" class="form-label custom-label">Durum</label>
+        <select class="form-select custom-select" id="durumId" formControlName="durumId">
+          <option value="">Hepsi</option>
+          <option value="1">Başarılı</option>
+          <option value="2">Başarısız</option>
+        </select>
+      </div>
+
+      <!-- İşlem Tipi -->
+      <div class="col-md-4 mb-3">
+        <label for="islemTipId" class="form-label custom-label">İşlem Tipi</label>
+        <select class="form-select custom-select" id="islemTipId" formControlName="islemTipId">
+          <option value="">Hepsi</option>
+          <option value="1">Yeni Kayıt</option>
+          <option value="2">Güncelleme</option>
+          <option value="3">Silme</option>
+        </select>
+      </div>
+
+      <!-- Açıklama -->
+      <div class="col-md-4 mb-3">
+        <label for="aciklama" class="form-label custom-label">Açıklama</label>
+        <input type="text" class="form-control custom-input" id="aciklama" formControlName="aciklama">
+      </div>
+
+      <!-- Tarih -->
+      <div class="col-md-4 mb-3">
+        <label for="tarihSaat" class="form-label custom-label">Tarih</label>
+        <input type="date" class="form-control custom-input" id="tarihSaat" formControlName="tarihSaat">
+      </div>
+
+      <!-- Kullanıcı IP -->
+      <div class="col-md-4 mb-3">
+        <label for="kullaniciIp" class="form-label custom-label">Kullanıcı IP</label>
+        <input type="text" class="form-control custom-input" id="kullaniciIp" formControlName="kullaniciIp">
+      </div>
+    </div>
+
+    <!-- Filtreleme ve Excel'e Aktar Butonları -->
+    <div class="d-flex justify-content-between mt-4">
+      <button type="submit" class="btn filtre-btn">Filtrele</button>
+      <button type="button" class="btn btn-secondary" (click)="exportToExcel()">Excel'e Aktar</button>
+    </div>
+  </form>
+
+  <div *ngIf="logs.length > 0" class="mt-4">
+    <h3>Log Kayıtları</h3>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Kullanıcı ID</th>
+          <th scope="col">Durum</th>
+          <th scope="col">İşlem Tipi</th>
+          <th scope="col">Açıklama</th>
+          <th scope="col">Tarih</th>
+          <th scope="col">Kullanıcı IP</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let log of logs | paginate: { itemsPerPage: pageSize, currentPage: p }">
+          <td>{{ log.kullaniciId }}</td>
+          <td>{{ getDurum(log.durumId) }}</td>
+          <td>{{ getIslemTip(log.islemTipId) }}</td>
+          <td>{{ log.aciklama }}</td>
+          <td>{{ log.tarihSaat | date: 'short' }}</td>
+          <td>{{ log.kullaniciIp }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination Controls -->
+    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+  </div>
+</div>

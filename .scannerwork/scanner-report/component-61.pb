@@ -1,0 +1,1 @@
+= 2webXNhr6src/app/update-tasinmaz/update-tasinmaz.component.html

@@ -38,34 +38,6 @@ export class Map2Component implements OnInit {
     this.getTasinmazlarByUser();
   }
 
-  getTasinmazlarByUser(): void {
-    // Admin kontrolünü burada yapın
-    const userRole = this.authService.getCurrentUserRole();
-    const filters = {};
-
-    if (userRole === 'Admin') {
-      this.tasinmazService.getAllProperties(filters).subscribe(
-        (data) => {
-          this.tasinmazlar = data;
-          this.addMarkers();
-        },
-        (error) => {
-          console.error('Tasinmazlar alınırken hata oluştu:', error);
-        }
-      );
-    } else {
-      this.tasinmazService.getTasinmazByKullaniciId(this.userId, filters).subscribe(
-        (data) => {
-          this.tasinmazlar = data;
-          this.addMarkers();
-        },
-        (error) => {
-          console.error('Tasinmazlar alınırken hata oluştu:', error);
-        }
-      );
-    }
-  }
-
   initializeMap(): void {
     this.osmLayer = new TileLayer({
       source: new OSM(),
@@ -97,7 +69,7 @@ export class Map2Component implements OnInit {
         this.vectorLayer
       ],
       view: new View({
-        center: fromLonLat([37.41, 8.82]),
+        center: fromLonLat([37.41, 8.82]), // Başlangıç koordinatları
         zoom: 4
       }),
       controls: [this.scaleLineControl]
@@ -114,21 +86,30 @@ export class Map2Component implements OnInit {
     });
   }
 
-  toggleLayer(layerName: string, event: MouseEvent): void {
-    event.stopPropagation();
+  getTasinmazlarByUser(): void {
+    const userRole = this.authService.getCurrentUserRole();
+    const filters = {};
 
-    if (layerName === 'osm') {
-      this.osmLayer.setVisible(!this.osmLayer.getVisible());
-    } else if (layerName === 'googleMaps') {
-      this.googleMapsLayer.setVisible(!this.googleMapsLayer.getVisible());
-    }
-  }
-
-  setLayerOpacity(layerName: string, opacity: number): void {
-    if (layerName === 'osm') {
-      this.osmLayer.setOpacity(opacity);
-    } else if (layerName === 'googleMaps') {
-      this.googleMapsLayer.setOpacity(opacity);
+    if (userRole === 'Admin') {
+      this.tasinmazService.getAllProperties(filters).subscribe(
+        (data) => {
+          this.tasinmazlar = data;
+          this.addMarkers(); // Marker'ları ekle
+        },
+        (error) => {
+          console.error('Tasinmazlar alınırken hata oluştu:', error);
+        }
+      );
+    } else {
+      this.tasinmazService.getTasinmazByKullaniciId(this.userId, filters).subscribe(
+        (data) => {
+          this.tasinmazlar = data;
+          this.addMarkers(); // Marker'ları ekle
+        },
+        (error) => {
+          console.error('Tasinmazlar alınırken hata oluştu:', error);
+        }
+      );
     }
   }
 
@@ -137,59 +118,56 @@ export class Map2Component implements OnInit {
 
     this.tasinmazlar.forEach(tasinmaz => {
       const koordinatBilgileri = tasinmaz.koordinatBilgileri.split(',').map(parseFloat);
-      const marker = new Feature({
-        geometry: new Point(fromLonLat([koordinatBilgileri[1], koordinatBilgileri[0]]))
-      });
+      if (koordinatBilgileri.length === 2) {
+        const marker = new Feature({
+          geometry: new Point(fromLonLat([koordinatBilgileri[1], koordinatBilgileri[0]]))
+        });
 
-      marker.setStyle(new Style({
-        image: new Icon({
-          anchor: [0.5, 1],
-          src: 'https://openlayers.org/en/latest/examples/data/icon.png'
-        })
-      }));
+        marker.setStyle(new Style({
+          image: new Icon({
+            anchor: [0.5, 1],
+            src: 'https://openlayers.org/en/latest/examples/data/icon.png'
+          })
+        }));
 
-      this.vectorLayer.getSource().addFeature(marker);
+        this.vectorLayer.getSource().addFeature(marker);
+      } else {
+        console.warn('Geçersiz koordinat formatı:', tasinmaz.koordinatBilgileri);
+      }
     });
   }
-
-  
 
   setCenterAndZoom(coordinates: [number, number], zoom: number): void {
     const view = this.map.getView();
     const transformedCoordinates = fromLonLat([coordinates[0], coordinates[1]]);
     view.setCenter(transformedCoordinates);
     view.setZoom(zoom);
-  
-    // Sadece merkez ve zoom'u ayarlamak için addMarker çağırmadan
-    // Koordinatlar mevcut marker'lardan biri değilse yeni bir marker ekleyin
+
     const features = this.vectorLayer.getSource().getFeatures();
     const existingFeature = features.find(feature => {
       const coord = (feature.getGeometry() as Point).getCoordinates();
       const lonLat = toLonLat(coord);
       return lonLat[0] === coordinates[1] && lonLat[1] === coordinates[0];
     });
-  
+
     if (!existingFeature) {
       this.addMarker([coordinates[1], coordinates[0]]);
     }
   }
-  
 
   addMarker(coordinates: [number, number]): void {
     const transformedCoordinates = fromLonLat([coordinates[1], coordinates[0]]);
-  
     const marker = new Feature({
       geometry: new Point(transformedCoordinates)
     });
-  
+
     marker.setStyle(new Style({
       image: new Icon({
         anchor: [0.5, 1],
         src: 'https://openlayers.org/en/latest/examples/data/icon.png'
       })
     }));
-  
+
     this.vectorLayer.getSource().addFeature(marker);
   }
-  
 }

@@ -1,0 +1,3 @@
+ô
+èThe property 'sonar.login' is deprecated and will be removed in the future. Please use the 'sonar.token' property instead when passing a token.é•∫±ì2∞
+¶Missing blame information for 4 files. This may lead to some features not working correctly. Please check the analysis logs and refer to <a href="https://docs.sonarsource.com/sonarqube/10.6/analyzing-source-code/scm-integration/" rel="noopener noreferrer" target="_blank">the documentation</a>.•‘≈±ì2

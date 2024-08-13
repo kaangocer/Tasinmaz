@@ -1,0 +1,1 @@
+9 2webXŒhr4src/app/tasinmaz-table/tasinmaz-table.component.html

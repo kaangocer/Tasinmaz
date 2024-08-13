@@ -16,7 +16,7 @@ export class LogReportingComponent implements OnInit {
   pageSize: number = 15;
 
   constructor(
-    private fb: FormBuilder, // FormBuilder enjekte ediliyor
+    private fb: FormBuilder, 
     private logService: LogService,
     private toastr: ToastrService,
     private exportService: ExportService

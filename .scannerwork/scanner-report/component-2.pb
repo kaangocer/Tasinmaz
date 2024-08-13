@@ -1,0 +1,1 @@
+ 2cssX1hr/src/app/add-tasinmaz/add-tasinmaz.component.css

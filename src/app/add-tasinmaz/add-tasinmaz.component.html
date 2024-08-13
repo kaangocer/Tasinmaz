@@ -3,55 +3,55 @@
 <div class="container mt-5">
   <h2 class="mb-4 text-center">Taşınmaz Ekle</h2>
 
-  <form (ngSubmit)="onSubmit()" #tasinmazForm="ngForm" class="shadow-sm p-4 bg-light rounded border">
+  <form [formGroup]="tasinmazForm" (ngSubmit)="onSubmit()" class="shadow-sm p-4 bg-light rounded border">
     <div class="mb-3">
       <div *ngIf="isAdmin" class="d-none">
-        <input type="number" class="form-control" id="kullaniciId" readonly required [(ngModel)]="tasinmaz.kullaniciId" name="kullaniciId">
+        <input type="number" class="form-control" id="kullaniciId" readonly formControlName="kullaniciId">
       </div>
     </div>
 
     <div class="mb-3">
       <label for="ilId" class="form-label">İl</label>
-      <select class="form-select" id="ilId" required [(ngModel)]="selectedIlId" name="ilId" (change)="onIlChange()">
-        <option value="" disabled selected>Seçiniz</option>
+      <select class="form-select" id="ilId" formControlName="ilId" (change)="onIlChange()">
+        <option value="" disabled>Seçiniz</option>
         <option *ngFor="let il of iller" [value]="il.ilId">{{ il.ilAdi }}</option>
       </select>
     </div>
 
     <div class="mb-3">
       <label for="ilceId" class="form-label">İlçe</label>
-      <select class="form-select" id="ilceId" required [(ngModel)]="selectedIlceId" name="ilceId" (change)="onIlceChange()">
-        <option value="" disabled selected>Seçiniz</option>
+      <select class="form-select" id="ilceId" formControlName="ilceId" (change)="onIlceChange()">
+        <option value="" disabled>Seçiniz</option>
         <option *ngFor="let ilce of ilceler" [value]="ilce.ilceId">{{ ilce.ilceAdi }}</option>
       </select>
     </div>
 
     <div class="mb-3">
       <label for="mahalleId" class="form-label">Mahalle</label>
-      <select class="form-select" id="mahalleId" required [(ngModel)]="tasinmaz.mahalleId" name="mahalleId">
-        <option value="" disabled selected>Seçiniz</option>
+      <select class="form-select" id="mahalleId" formControlName="mahalleId">
+        <option value="" disabled>Seçiniz</option>
         <option *ngFor="let mahalle of mahalleler" [value]="mahalle.mahalleId">{{ mahalle.mahalleAdi }}</option>
       </select>
     </div>
 
     <div class="mb-3">
       <label for="ada" class="form-label">ADA</label>
-      <input type="text" class="form-control" id="ada" [(ngModel)]="tasinmaz.ada" name="ada">
+      <input type="text" class="form-control" id="ada" formControlName="ada">
     </div>
 
     <div class="mb-3">
       <label for="parsel" class="form-label">PARSEL</label>
-      <input type="text" class="form-control" id="parsel" [(ngModel)]="tasinmaz.parsel" name="parsel">
+      <input type="text" class="form-control" id="parsel" formControlName="parsel">
     </div>
 
     <div class="mb-3">
       <label for="nitelik" class="form-label">NİTELİK</label>
-      <input type="text" class="form-control" id="nitelik" [(ngModel)]="tasinmaz.nitelik" name="nitelik">
+      <input type="text" class="form-control" id="nitelik" formControlName="nitelik">
     </div>
 
     <div class="mb-4">
       <label for="koordinatBilgileri" class="form-label">KOORDİNAT BİLGİLERİ</label>
-      <input type="text" class="form-control" id="koordinatBilgileri" [(ngModel)]="tasinmaz.koordinatBilgileri" name="koordinatBilgileri" readonly>
+      <input type="text" class="form-control" id="koordinatBilgileri" formControlName="koordinatBilgileri" readonly>
     </div>
 
     <div class="mb-4">

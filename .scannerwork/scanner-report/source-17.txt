@@ -1,0 +1,51 @@
+::ng-deep .mat-dialog-container {
+    background-color: #f8f9fa !important; 
+    width: 400px !important;
+    height: 270px !important;
+  }
+  
+  ::ng-deep .mat-dialog-title {
+    font-size: 1.5rem !important;
+    font-weight: bold !important;
+    color: #343a40 !important;
+    text-align: center !important;
+  }
+  
+  ::ng-deep .mat-dialog-content {
+    font-size: 1rem !important;
+    color: #495057 !important;
+    padding: 20px !important;
+    text-align: center !important;
+  }
+  
+  ::ng-deep .mat-dialog-actions {
+    justify-content: center !important;
+    padding: 10px !important;
+  }
+  
+  ::ng-deep .dialog-button {
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    padding: 5px 5px !important;
+    margin: 0 5px !important;
+    border: none !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+  }
+  
+  ::ng-deep .dialog-button.yes {
+    background-color: #28a745 !important;
+    color: #fff !important;
+  }
+  
+  ::ng-deep .dialog-button.no {
+    background-color: #dc3545 !important;
+    color: #fff !important;
+  }
+  
+  ::ng-deep .dialog-button:hover {
+    opacity: 0.9 !important;
+  }
+  
+
+  

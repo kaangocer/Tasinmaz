@@ -1,0 +1,1 @@
+ 2webXYhr2src/app/log-reporting/log-reporting.component.html
