@@ -10,7 +10,7 @@ import { ExportService } from '../export.service';
   styleUrls: ['./log-reporting.component.css']
 })
 export class LogReportingComponent implements OnInit {
-  filterForm: FormGroup; // Reactive form tanımı
+  filterForm: FormGroup;
   logs: any[] = [];
   p: number = 1;
   pageSize: number = 15;
@@ -55,9 +55,23 @@ export class LogReportingComponent implements OnInit {
   }
 
   exportToExcel(): void {
-    this.exportService.exportToExcel(this.logs, 'log-kayitlari');
-    this.toastr.success('Log kayıtları başarıyla dışa aktarıldı!', 'Başarılı');
-  }
+  
+  const filteredData = this.logs.map(log => ({
+    kullaniciId: log.kullaniciId,
+    durumId: log.durumId,
+    islemTipId: log.islemTipId,
+    aciklama: log.aciklama,
+    tarihSaat: log.tarihSaat,
+    kullaniciIp: log.kullaniciIp
+  }));
+
+ 
+  this.exportService.exportToExcel(filteredData, 'log-kayitlari');
+
+ 
+  this.toastr.success('Log kayıtları başarıyla dışa aktarıldı!', 'Başarılı');
+}
+
 
   getDurum(durumId: number): string {
     switch (durumId) {

@@ -192,7 +192,22 @@ export class TasinmazTableComponent implements OnInit {
   }
 
   exportToExcel(): void {
-    this.exportService.exportToExcel(this.tasinmazlar, 'tasinmazlar');
+    
+    const filteredData = this.tasinmazlar.map(item => {
+      return {
+        
+        ada: item.ada,
+        parsel: item.parsel,
+        nitelik: item.nitelik,
+        koordinatBilgileri: item.koordinatBilgileri,
+        ilId: item.ilAd,
+        ilceId: item.ilceAd,
+        mahalleId: item.mahalleAd
+      };
+    });
+  
+    
+    this.exportService.exportToExcel(filteredData, 'tasinmazlar');
   }
 
   isAdmin(): boolean {

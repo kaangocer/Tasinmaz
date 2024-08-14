@@ -86,6 +86,23 @@ export class Map2Component implements OnInit {
     });
   }
 
+  toggleLayer(layerName: string): void {
+    if (layerName === 'osm') {
+      this.osmLayer.setVisible(!this.osmLayer.getVisible());
+    } else if (layerName === 'googleMaps') {
+      this.googleMapsLayer.setVisible(!this.googleMapsLayer.getVisible());
+    }
+  }
+
+  setLayerOpacity(layerName: string, opacity: number): void {
+    const opacityValue = parseFloat(opacity.toString());
+    if (layerName === 'osm') {
+      this.osmLayer.setOpacity(opacityValue);
+    } else if (layerName === 'googleMaps') {
+      this.googleMapsLayer.setOpacity(opacityValue);
+    }
+  }
+
   getTasinmazlarByUser(): void {
     const userRole = this.authService.getCurrentUserRole();
     const filters = {};
@@ -113,7 +130,7 @@ export class Map2Component implements OnInit {
     }
   }
 
-  addMarkers() {
+  addMarkers(): void {
     this.vectorLayer.getSource().clear();
 
     this.tasinmazlar.forEach(tasinmaz => {
