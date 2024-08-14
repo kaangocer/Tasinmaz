@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { Map2Component } from '../map2/map2.component';
 import { AuthService } from '../auth.service';
 import { TasinmazDTO, IlDTO, IlceDTO, MahalleDTO } from '../../models/DTOs/tasinmaz-dto';
-import { ExportService } from '../export.service';
+import { ExportService } from '../../services/otherServices/export.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 

@@ -69,8 +69,8 @@ export class Map2Component implements OnInit {
         this.vectorLayer
       ],
       view: new View({
-        center: fromLonLat([37.41, 8.82]), // Başlangıç koordinatları
-        zoom: 4
+        center: fromLonLat([35.518798828125,39.0429195233761]), // Başlangıç koordinatları
+        zoom: 6
       }),
       controls: [this.scaleLineControl]
     });

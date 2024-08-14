@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UserManagementService } from '../user-management.service';
+import { UserManagementService } from './user-management.service';
 import { UserDTO } from '../models/UserDTO'; // UserDTO'yu import edin
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';

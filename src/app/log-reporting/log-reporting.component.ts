@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { LogService } from '../log.service';
 import { ToastrService } from 'ngx-toastr';
-import { ExportService } from '../export.service';
+import { ExportService } from '../../services/otherServices/export.service';
 
 @Component({
   selector: 'app-log-reporting',

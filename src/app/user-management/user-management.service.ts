@@ -2,8 +2,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { UserDTO } from './models/UserDTO'; // Kullanıcı DTO'nuzu import edin
-import { AuthService } from './auth.service';
+import { UserDTO } from '../models/UserDTO'; // Kullanıcı DTO'nuzu import edin
+import { AuthService } from '../auth.service';
 
 @Injectable({
   providedIn: 'root'
